@@ -21,7 +21,8 @@ fn main() {
     fs::write(src_root.join(format!("{unit}.rs")), generate_expr_tests(files)).unwrap();
   }
 
-  let lib_mod = units.iter().map(|unit| format!("mod {};", unit)).collect::<Vec<String>>().join("\n");
+  let lib_mod =
+    units.iter().map(|unit| format!("mod {};", unit)).collect::<Vec<String>>().join("\n");
   fs::write(src_root.join("lib.rs"), lib_mod).unwrap();
 
   println!("Tests generated");

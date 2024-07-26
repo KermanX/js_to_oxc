@@ -41,10 +41,7 @@ fn expr_file(name: &str, source: &str) -> TokenStream {
   let parser = Parser::new(&allocator, source, SourceType::default());
   let expr_arr = parser.parse_expression().unwrap();
 
-  let js_to_oxc = JsToOxc {
-    ast_builder: quote! { ast_builder },
-    span: quote! { SPAN },
-  };
+  let js_to_oxc = JsToOxc { ast_builder: quote! { ast_builder }, span: quote! { SPAN } };
 
   let mut tokens = TokenStream::new();
   if let Expression::ArrayExpression(expr_arr) = expr_arr {
