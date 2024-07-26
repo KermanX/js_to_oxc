@@ -1,5 +1,5 @@
 [workspace]
-members = ["./crates/*"]
+members = ["./crates/*", "./crates/tests/temp"]
 resolver = "2"
 
 [workspace.package]
@@ -15,6 +15,7 @@ repository = "https://github.com/KermanX/js_to_oxc"
 [workspace.dependencies]
 js_to_oxc = { path = "./crates/js_to_oxc" }
 anyhow = "1.0.86"
+glob = "0.3.1"
 oxc = { version = "0.22.0", features = ["codegen"] }
 proc-macro2 = "1.0.86"
 quote = "1.0.36"

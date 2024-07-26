@@ -1,0 +1,14 @@
+[package]
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+version = "0.0.1"
+name = "js_to_oxc_tests"
+repository.workspace = true
+
+[dependencies]
+oxc = { workspace = true }
+js_to_oxc = { workspace = true }
+quote = { workspace = true }
+proc-macro2 = { workspace = true }
+glob = { workspace = true }

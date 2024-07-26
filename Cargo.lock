@@ -125,6 +125,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ce7134b9999ecaf8bcd65542e436736ef32ddca1b3e06094cb6ec5755203b80"
 
 [[package]]
+name = "glob"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
+
+[[package]]
 name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -162,6 +168,24 @@ dependencies = [
  "oxc",
  "proc-macro2",
  "quote",
+]
+
+[[package]]
+name = "js_to_oxc_tests"
+version = "0.0.1"
+dependencies = [
+ "glob",
+ "js_to_oxc",
+ "oxc",
+ "proc-macro2",
+ "quote",
+]
+
+[[package]]
+name = "js_to_oxc_tests_generated"
+version = "0.0.0"
+dependencies = [
+ "oxc",
 ]
 
 [[package]]

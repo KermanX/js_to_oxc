@@ -5,7 +5,7 @@ use oxc::{
   span::SourceType,
 };
 use proc_macro2::TokenStream;
-use quote::{quote, TokenStreamExt};
+use quote::{format_ident, quote, TokenStreamExt};
 
 pub fn js_to_oxc(source: &str) -> String {
   let allocator = Allocator::default();
@@ -16,7 +16,7 @@ pub fn js_to_oxc(source: &str) -> String {
   tokens.to_string()
 }
 
-struct JsToOxc {
+pub struct JsToOxc {
   pub ast_builder: TokenStream,
   pub span: TokenStream,
 }
@@ -30,7 +30,7 @@ impl JsToOxc {
     tokens
   }
 
-  fn gen_statement<'ast>(&self, node: &Statement<'ast>) -> TokenStream {
+  pub fn gen_statement<'ast>(&self, node: &Statement<'ast>) -> TokenStream {
     let mut tokens = TokenStream::new();
     match node {
       Statement::BlockStatement(block) => {
@@ -41,12 +41,12 @@ impl JsToOxc {
       Statement::ExpressionStatement(expr) => {
         tokens.append_all(self.gen_expression(&expr.expression));
       }
-      _ => unimplemented!(),
+      _ => tokens.append_all(unimplemented()),
     }
     tokens
   }
 
-  fn gen_expression<'ast>(&self, node: &Expression<'ast>) -> TokenStream {
+  pub fn gen_expression<'ast>(&self, node: &Expression<'ast>) -> TokenStream {
     let mut tokens = TokenStream::new();
     let ast_builder = &self.ast_builder;
     let span = &self.span;
@@ -77,11 +77,16 @@ impl JsToOxc {
         let optional = node.optional;
         tokens.append_all(quote! {
             #ast_builder.expression_member(
-                #ast_builder.member_expression_static(#span, #object, #property, #optional)
+                #ast_builder.member_expression_static(
+                  #span,
+                  #object,
+                  #ast_builder.identifier_name(#span, #property),
+                  #optional,
+              )
             )
         });
       }
-      _ => unimplemented!(),
+      _ => tokens.append_all(unimplemented()),
     }
     tokens
   }
@@ -108,7 +113,7 @@ impl JsToOxc {
     let mut tokens = TokenStream::new();
     let ast_builder = &self.ast_builder;
     match node {
-      Argument::SpreadElement(_node) => unimplemented!(),
+      Argument::SpreadElement(_node) => tokens.append_all(unimplemented()),
       _ => {
         let expr = self.gen_expression(node.to_expression());
         tokens.append_all(quote! {
@@ -117,5 +122,12 @@ impl JsToOxc {
       }
     }
     tokens
+  }
+}
+
+fn unimplemented() -> TokenStream {
+  let t = format_ident!("unimplemented");
+  quote! {
+    #t!()
   }
 }
