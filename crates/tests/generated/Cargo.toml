@@ -2,5 +2,7 @@
 edition.workspace = true
 name = "js_to_oxc_tests_generated"
 
+[lib]
+
 [dependencies]
 oxc = { workspace = true }
