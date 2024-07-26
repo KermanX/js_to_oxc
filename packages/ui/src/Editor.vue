@@ -26,6 +26,7 @@ onMounted(async () => {
     padding: {
       top: 16,
     },
+    tabSize: 2,
   })
 
   if (props.readonly) {

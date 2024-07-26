@@ -14,5 +14,6 @@ export async function formatRust(source: string, signal: AbortSignal) {
   if (!data.success) {
     throw new Error(`${data.exitDetail}\n${data.stderr}`)
   }
-  return data.code
+  const code: string = data.code
+  return code.replaceAll(/^ {2,}/gm, all => all.slice(all.length / 2))
 }
