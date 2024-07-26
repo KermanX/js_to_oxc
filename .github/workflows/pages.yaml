@@ -39,14 +39,15 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Install dependencies
-        run: |
-          pnpm i
-          cargo build
+      - name: Build crates
+        run: cargo build --release
 
       - name: Build wasm
         run: wasm-pack build --release
         working-directory: ./crates/wasm_binding
+
+      - name: Install NPM dependencies
+        run: pnpm i
 
       - name: Build UI
         run: pnpm run ui:build --base /${{github.event.repository.name}}/
