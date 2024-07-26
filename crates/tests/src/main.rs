@@ -6,27 +6,12 @@ use std::path::PathBuf;
 fn main() {
   let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
   let fixture_root = root.join("fixtures");
-  let temp_root = root.join("temp");
+  let generated_root = root.join("generated");
+  let src_root = generated_root.join("src");
 
-  if temp_root.exists() {
-    fs::remove_dir_all(temp_root.clone()).unwrap();
+  if src_root.exists() {
+    fs::remove_dir_all(src_root.clone()).unwrap();
   }
-
-  fs::create_dir_all(temp_root.clone()).unwrap();
-
-  fs::write(
-    temp_root.join("Cargo.toml"),
-    "[package]
-edition.workspace = true
-name = \"js_to_oxc_tests_generated\"
-
-[dependencies]
-oxc = { workspace = true }
-",
-  )
-  .unwrap();
-
-  let src_root = temp_root.join("src");
   fs::create_dir(src_root.clone()).unwrap();
 
   let units = vec!["expr"];

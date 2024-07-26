@@ -1,0 +1,6 @@
+[package]
+edition.workspace = true
+name = "js_to_oxc_tests_generated"
+
+[dependencies]
+oxc = { workspace = true }
