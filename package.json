@@ -3,7 +3,7 @@
   "packageManager": "pnpm@9.6.0",
   "scripts": {
     "lint": "eslint . --cache",
-    "lint:fix": "eslint . --cache --fix",
+    "lint:fix": "cargo fmt && eslint . --cache --fix",
     "ui:dev": "pnpm -C packages/ui dev",
     "ui:build": "pnpm -C packages/ui build"
   },
