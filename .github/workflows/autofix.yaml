@@ -1,0 +1,26 @@
+name: autofix.ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm i
+
+      - run: pnpm lint:fix
+
+      - uses: autofix-ci/action@d3e591514b99d0fca6779455ff8338516663f7cc

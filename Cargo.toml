@@ -1,0 +1,21 @@
+[workspace]
+members = ["./crates/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+homepage = "https://rolldown.rs/"
+license = "MIT"
+repository = "https://github.com/KermanX/js_to_oxc"
+
+[workspace.lints.rust]
+
+[workspace.lints.clippy]
+
+[workspace.dependencies]
+js_to_oxc = { path = "./crates/js_to_oxc" }
+anyhow = "1.0.86"
+oxc = { version = "0.22.0", features = ["codegen"] }
+proc-macro2 = "1.0.86"
+quote = "1.0.36"
+wasm-bindgen = "0.2.92"

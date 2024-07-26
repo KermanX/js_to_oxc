@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "packageManager": "pnpm@9.6.0",
+  "scripts": {
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --cache --fix",
+    "ui:dev": "pnpm -C packages/ui dev",
+    "ui:build": "pnpm -C packages/ui build"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.23.2",
+    "eslint": "^9.7.0",
+    "typescript": "^5.5.4"
+  }
+}

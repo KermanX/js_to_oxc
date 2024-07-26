@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.1.36",
+    "@shikijs/monaco": "^1.11.2",
+    "@unocss/reset": "^0.61.5",
+    "@vitejs/plugin-vue": "^5.1.0",
+    "@vueuse/core": "^10.11.0",
+    "js_to_oxc_wasm": "file:../../crates/wasm_binding/pkg",
+    "monaco-editor-core": "^0.50.0",
+    "shiki": "^1.11.2",
+    "unocss": "^0.61.5",
+    "vite": "^5.3.5",
+    "vite-plugin-wasm": "^3.3.0",
+    "vue": "^3.4.34"
+  }
+}
