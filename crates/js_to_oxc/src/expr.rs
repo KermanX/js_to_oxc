@@ -63,7 +63,11 @@ impl JsToOxc {
       }
 
       Expression::MetaProperty(_) => unimplemented(),
-      Expression::Super(_) => unimplemented(),
+      Expression::Super(_node) => {
+        quote! {
+            #ast_builder.expression_super(#span)
+        }
+      }
 
       Expression::ArrayExpression(node) => {
         let elements =
