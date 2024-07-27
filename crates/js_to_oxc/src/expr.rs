@@ -63,7 +63,7 @@ impl JsToOxc {
       }
 
       Expression::MetaProperty(node) => {
-        let meta =self.gen_identifier_name(&node.meta);
+        let meta = self.gen_identifier_name(&node.meta);
         let property = self.gen_identifier_name(&node.property);
         quote! {
             #ast_builder.expression_meta_property(#span, #meta, #property)
