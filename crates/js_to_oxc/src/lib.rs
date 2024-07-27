@@ -5,7 +5,20 @@ use oxc::{
   span::SourceType,
 };
 use proc_macro2::TokenStream;
-use quote::{format_ident, quote, TokenStreamExt};
+use quote::{quote, TokenStreamExt};
+use utils::unimplemented;
+
+mod array;
+mod bigint;
+mod expr;
+mod member;
+mod number;
+mod option;
+mod private_identifier;
+mod regexp;
+mod template_literal;
+mod utils;
+mod vec;
 
 pub fn js_to_oxc(source: &str) -> String {
   let allocator = Allocator::default();
@@ -46,51 +59,6 @@ impl JsToOxc {
     tokens
   }
 
-  pub fn gen_expression<'ast>(&self, node: &Expression<'ast>) -> TokenStream {
-    let mut tokens = TokenStream::new();
-    let ast_builder = &self.ast_builder;
-    let span = &self.span;
-    match node {
-      Expression::CallExpression(node) => {
-        let arguments = self.gen_arguments(&node.arguments);
-        let callee = self.gen_expression(&node.callee);
-        let optional = node.optional;
-        tokens.append_all(quote! {
-                    #ast_builder.expression_call(#span, #arguments, #callee, Option::<TSTypeParameterInstantiation>::None, #optional)
-                });
-      }
-      Expression::StringLiteral(node) => {
-        let value = node.value.as_str();
-        tokens.append_all(quote! {
-            #ast_builder.expression_string_literal(#span, #value)
-        });
-      }
-      Expression::Identifier(node) => {
-        let name = node.name.as_str();
-        tokens.append_all(quote! {
-            #ast_builder.expression_identifier_reference(#span, #name)
-        });
-      }
-      Expression::StaticMemberExpression(node) => {
-        let object = self.gen_expression(&node.object);
-        let property = node.property.name.as_str();
-        let optional = node.optional;
-        tokens.append_all(quote! {
-            #ast_builder.expression_member(
-                #ast_builder.member_expression_static(
-                  #span,
-                  #object,
-                  #ast_builder.identifier_name(#span, #property),
-                  #optional,
-              )
-            )
-        });
-      }
-      _ => tokens.append_all(unimplemented()),
-    }
-    tokens
-  }
-
   fn gen_arguments<'ast>(&self, node: &Vec<'ast, Argument<'ast>>) -> TokenStream {
     let mut arguments = TokenStream::new();
     let ast_builder = &self.ast_builder;
@@ -122,12 +90,5 @@ impl JsToOxc {
       }
     }
     tokens
-  }
-}
-
-fn unimplemented() -> TokenStream {
-  let t = format_ident!("unimplemented");
-  quote! {
-    #t!()
   }
 }
