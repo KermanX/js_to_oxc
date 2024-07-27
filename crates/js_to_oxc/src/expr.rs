@@ -83,7 +83,7 @@ impl JsToOxc {
         quote! {
           #ast_builder.expression_assignment(#span, #operator, #left, #right)
         }
-      },
+      }
       Expression::AwaitExpression(_) => unimplemented(),
       Expression::BinaryExpression(node) => {
         let ast_builder = &self.ast_builder;

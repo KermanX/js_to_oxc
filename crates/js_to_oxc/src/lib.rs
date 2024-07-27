@@ -9,18 +9,18 @@ use quote::{quote, TokenStreamExt};
 use utils::unimplemented;
 
 mod array;
+mod assignment;
 mod bigint;
 mod expr;
 mod member;
 mod number;
+mod operator;
 mod option;
 mod private_identifier;
 mod regexp;
 mod template_literal;
 mod utils;
-mod operator;
 mod vec;
-mod assignment;
 
 pub fn js_to_oxc(source: &str) -> String {
   let allocator = Allocator::default();
