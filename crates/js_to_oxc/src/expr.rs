@@ -204,7 +204,14 @@ impl JsToOxc {
           #ast_builder.expression_sequence(#span, #expressions)
         }
       }
-      Expression::TaggedTemplateExpression(_) => unimplemented(),
+      Expression::TaggedTemplateExpression(node) => {
+        let tag = self.gen_expression(&node.tag);
+        let quasi = self.gen_template_literal(&node.quasi);
+        let type_parameters = quote! { Option::<TSTypeParameterInstantiation>::None };
+        quote! {
+          #ast_builder.expression_tagged_template(#span, #tag, #quasi, #type_parameters)
+        }
+      }
       Expression::ThisExpression(_node) => {
         quote! {
           #ast_builder.expression_this(#span)
