@@ -1,4 +1,6 @@
-use oxc::syntax::operator::{AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator};
+use oxc::syntax::operator::{
+  AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator, UpdateOperator,
+};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -70,6 +72,13 @@ impl JsToOxc {
       AssignmentOperator::LogicalOr => quote! { AssignmentOperator::LogicalOr },
       AssignmentOperator::LogicalNullish => quote! { AssignmentOperator::LogicalNullish },
       AssignmentOperator::Exponential => quote! { AssignmentOperator::Exponential },
+    }
+  }
+
+  pub(crate) fn gen_update_operator(&self, operator: &UpdateOperator) -> TokenStream {
+    match operator {
+      UpdateOperator::Increment => quote! { UpdateOperator::Increment },
+      UpdateOperator::Decrement => quote! { UpdateOperator::Decrement },
     }
   }
 }

@@ -16,7 +16,7 @@ impl JsToOxc {
     }
   }
 
-  fn gen_simple_assignment_target(&self, target: &SimpleAssignmentTarget) -> TokenStream {
+  pub(crate) fn gen_simple_assignment_target(&self, target: &SimpleAssignmentTarget) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     match target {
@@ -30,7 +30,7 @@ impl JsToOxc {
         let node = target.to_member_expression();
         let inner = self.gen_member_expression(&node);
         quote! {
-          #ast_builder.simple_assignment_target_member_expression(#span, #inner)
+          #ast_builder.simple_assignment_target_member_expression(#inner)
         }
       }
     }

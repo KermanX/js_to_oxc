@@ -199,7 +199,14 @@ impl JsToOxc {
           #ast_builder.expression_unary(#span, #operator, #argument)
         }
       }
-      Expression::UpdateExpression(_) => unimplemented(),
+      Expression::UpdateExpression(node) => {
+        let operator = self.gen_update_operator(&node.operator);
+        let prefix = node.prefix;
+        let argument = self.gen_simple_assignment_target(&node.argument);
+        quote! {
+          #ast_builder.expression_update(#span, #operator, #prefix, #argument)
+        }
+      }
       Expression::YieldExpression(_) => unimplemented(),
       Expression::PrivateInExpression(_) => unimplemented(),
 
