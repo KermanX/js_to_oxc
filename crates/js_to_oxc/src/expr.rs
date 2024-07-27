@@ -137,7 +137,12 @@ impl JsToOxc {
         }
       },
       Expression::ObjectExpression(_) => unimplemented(),
-      Expression::ParenthesizedExpression(_) => unimplemented(),
+      Expression::ParenthesizedExpression(node) => {
+        let expression = self.gen_expression(&node.expression);
+        quote! {
+          #ast_builder.expression_parenthesized(#span, #expression)
+        }
+      },
       Expression::SequenceExpression(_) => unimplemented(),
       Expression::TaggedTemplateExpression(_) => unimplemented(),
       Expression::ThisExpression(_) => unimplemented(),
