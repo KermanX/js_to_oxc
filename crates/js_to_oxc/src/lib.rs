@@ -13,7 +13,6 @@ mod number;
 mod object;
 mod operator;
 mod option;
-mod private_identifier;
 mod program;
 mod regexp;
 mod statement;

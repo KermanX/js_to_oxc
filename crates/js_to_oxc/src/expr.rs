@@ -241,7 +241,14 @@ impl JsToOxc {
           #ast_builder.expression_yield(#span, #delegate, #argument)
         }
       }
-      Expression::PrivateInExpression(_) => unimplemented(),
+      Expression::PrivateInExpression(node) => {
+        let left = self.gen_private_identifier(&node.left);
+        let operator = self.gen_binary_operator(&node.operator);
+        let right = self.gen_expression(&node.right);
+        quote! {
+          #ast_builder.expression_private_in(#span, #left, #operator, #right)
+        }
+      }
 
       Expression::JSXElement(_) => unimplemented(),
       Expression::JSXFragment(_) => unimplemented(),

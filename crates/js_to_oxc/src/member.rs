@@ -36,7 +36,7 @@ impl JsToOxc {
       }
       MemberExpression::PrivateFieldExpression(node) => {
         let object = self.gen_expression(&node.object);
-        let field = self.gen_private_identifier_base(&node.field);
+        let field = self.gen_private_identifier(&node.field);
         let optional = node.optional;
         quote! {
           #ast_builder.member_expression_private_field(
