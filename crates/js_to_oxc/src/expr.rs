@@ -89,7 +89,7 @@ impl JsToOxc {
         quote! {
           #ast_builder.expression_await(#span, #argument)
         }
-      },
+      }
       Expression::BinaryExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
@@ -124,8 +124,22 @@ impl JsToOxc {
         quote! {
           #ast_builder.expression_conditional(#span, #test, #consequent, #alternate)
         }
-      },
-      Expression::FunctionExpression(_) => unimplemented(),
+      }
+      Expression::FunctionExpression(node) => {
+        let r#type = self.gen_function_type(&node.r#type);
+        let id = self.gen_option(&node.id, |id| self.gen_binding_identifier(id));
+        let generator = node.generator;
+        let r#async = node.r#async;
+        let declare = node.declare;
+        let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
+        let this_param = quote! { Option::<TSThisParameter>::None };
+        let params = self.gen_formal_parameters(&node.params);
+        let return_type = quote! { Option::<TSTypeAnnotation>::None };
+        let body = self.gen_option(&node.body, |body| self.gen_function_body(body));
+        quote! {
+          #ast_builder.expression_function(#r#type, #span, #id, #generator, #r#async, #declare, #type_parameters, #this_param, #params, #return_type, #body)
+        }
+      }
       Expression::ImportExpression(node) => {
         let source = self.gen_expression(&node.source);
         let arguments = self.gen_vec(&node.arguments, |expr| self.gen_expression(expr));
@@ -149,20 +163,20 @@ impl JsToOxc {
         quote! {
           #ast_builder.expression_new(#span, #callee, #arguments, Option::<TSTypeParameterInstantiation>::None)
         }
-      },
+      }
       Expression::ObjectExpression(node) => {
         let properties = self.gen_vec(&node.properties, |prop| self.gen_object_property(prop));
         let trailing_comma = self.gen_option(&node.trailing_comma, |_| quote! { #span });
         quote! {
           #ast_builder.expression_object(#span, #properties, #trailing_comma)
         }
-      },
+      }
       Expression::ParenthesizedExpression(node) => {
         let expression = self.gen_expression(&node.expression);
         quote! {
           #ast_builder.expression_parenthesized(#span, #expression)
         }
-      },
+      }
       Expression::SequenceExpression(_) => unimplemented(),
       Expression::TaggedTemplateExpression(_) => unimplemented(),
       Expression::ThisExpression(_) => unimplemented(),

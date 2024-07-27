@@ -46,7 +46,7 @@ impl JsToOxc {
     }
   }
 
-  fn gen_property_key(&self, key: &PropertyKey) -> TokenStream {
+  pub(crate) fn gen_property_key(&self, key: &PropertyKey) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     match key {

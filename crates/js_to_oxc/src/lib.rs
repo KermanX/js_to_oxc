@@ -11,8 +11,12 @@ use utils::unimplemented;
 mod array;
 mod assignment;
 mod bigint;
+mod binding;
 mod chain;
 mod expr;
+mod function;
+mod identifier;
+mod literal;
 mod member;
 mod number;
 mod object;
@@ -20,6 +24,7 @@ mod operator;
 mod option;
 mod private_identifier;
 mod regexp;
+mod statement;
 mod template_literal;
 mod utils;
 mod vec;
@@ -43,22 +48,6 @@ impl JsToOxc {
     let mut tokens = TokenStream::new();
     for stmt in &node.body {
       tokens.append_all(self.gen_statement(stmt));
-    }
-    tokens
-  }
-
-  pub fn gen_statement<'ast>(&self, node: &Statement<'ast>) -> TokenStream {
-    let mut tokens = TokenStream::new();
-    match node {
-      Statement::BlockStatement(block) => {
-        for stmt in &block.body {
-          tokens.append_all(self.gen_statement(stmt));
-        }
-      }
-      Statement::ExpressionStatement(expr) => {
-        tokens.append_all(self.gen_expression(&expr.expression));
-      }
-      _ => tokens.append_all(unimplemented()),
     }
     tokens
   }
