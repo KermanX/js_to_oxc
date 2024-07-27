@@ -40,7 +40,7 @@ pub fn generate_expr_tests(files: Paths) -> String {
 
 fn expr_file(name: &str, source: &str) -> TokenStream {
   let allocator = Allocator::default();
-  let parser = Parser::new(&allocator, source, SourceType::default());
+  let parser = Parser::new(&allocator, source, SourceType::default().with_module(true));
   let expr_arr = parser.parse_expression().unwrap();
 
   let js_to_oxc = JsToOxc { ast_builder: quote! { ast_builder }, span: quote! { SPAN } };

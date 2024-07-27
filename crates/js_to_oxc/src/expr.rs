@@ -84,7 +84,12 @@ impl JsToOxc {
           #ast_builder.expression_assignment(#span, #operator, #left, #right)
         }
       }
-      Expression::AwaitExpression(_) => unimplemented(),
+      Expression::AwaitExpression(node) => {
+        let argument = self.gen_expression(&node.argument);
+        quote! {
+          #ast_builder.expression_await(#span, #argument)
+        }
+      },
       Expression::BinaryExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
