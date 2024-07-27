@@ -1,4 +1,4 @@
-use oxc::syntax::operator::BinaryOperator;
+use oxc::syntax::operator::{BinaryOperator, LogicalOperator};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -29,6 +29,14 @@ impl JsToOxc {
       BinaryOperator::In => quote! { BinaryOperator::In },
       BinaryOperator::Instanceof => quote! { BinaryOperator::Instanceof },
       BinaryOperator::Exponential => quote! { BinaryOperator::Exponential },
+    }
+  }
+
+  pub(crate) fn gen_logical_operator(&self, operator: &LogicalOperator) -> TokenStream {
+    match operator {
+      LogicalOperator::Or => quote! { LogicalOperator::Or },
+      LogicalOperator::And => quote! { LogicalOperator::And },
+      LogicalOperator::Coalesce => quote! { LogicalOperator::Coalesce },
     }
   }
 }

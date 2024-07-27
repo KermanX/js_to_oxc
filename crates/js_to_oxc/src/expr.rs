@@ -99,7 +99,16 @@ impl JsToOxc {
       Expression::ConditionalExpression(_) => unimplemented(),
       Expression::FunctionExpression(_) => unimplemented(),
       Expression::ImportExpression(_) => unimplemented(),
-      Expression::LogicalExpression(_) => unimplemented(),
+      Expression::LogicalExpression(node) => {
+        let ast_builder = &self.ast_builder;
+        let span = &self.span;
+        let left = self.gen_expression(&node.left);
+        let right = self.gen_expression(&node.right);
+        let operator = self.gen_logical_operator(&node.operator);
+        quote! {
+          #ast_builder.expression_logical(#span, #left, #operator, #right)
+        }
+      }
       Expression::NewExpression(_) => unimplemented(),
       Expression::ObjectExpression(_) => unimplemented(),
       Expression::ParenthesizedExpression(_) => unimplemented(),
