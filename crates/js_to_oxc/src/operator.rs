@@ -1,4 +1,4 @@
-use oxc::syntax::operator::{BinaryOperator, LogicalOperator, UnaryOperator};
+use oxc::syntax::operator::{AssignmentOperator, BinaryOperator, LogicalOperator, UnaryOperator};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -49,6 +49,27 @@ impl JsToOxc {
       UnaryOperator::Typeof => quote! { UnaryOperator::Typeof },
       UnaryOperator::Void => quote! { UnaryOperator::Void },
       UnaryOperator::Delete => quote! { UnaryOperator::Delete },
+    }
+  }
+
+  pub(crate) fn gen_assignment_operator(&self, operator: &AssignmentOperator) -> TokenStream {
+    match operator {
+      AssignmentOperator::Assign => quote! { AssignmentOperator::Assign },
+      AssignmentOperator::Addition => quote! { AssignmentOperator::Addition },
+      AssignmentOperator::Subtraction => quote! { AssignmentOperator::Subtraction },
+      AssignmentOperator::Multiplication => quote! { AssignmentOperator::Multiplication },
+      AssignmentOperator::Division => quote! { AssignmentOperator::Division },
+      AssignmentOperator::Remainder => quote! { AssignmentOperator::Remainder },
+      AssignmentOperator::ShiftLeft => quote! { AssignmentOperator::ShiftLeft },
+      AssignmentOperator::ShiftRight => quote! { AssignmentOperator::ShiftRight },
+      AssignmentOperator::ShiftRightZeroFill => quote! { AssignmentOperator::ShiftRightZeroFill },
+      AssignmentOperator::BitwiseOR => quote! { AssignmentOperator::BitwiseOR },
+      AssignmentOperator::BitwiseXOR => quote! { AssignmentOperator::BitwiseXOR },
+      AssignmentOperator::BitwiseAnd => quote! { AssignmentOperator::BitwiseAnd },
+      AssignmentOperator::LogicalAnd => quote! { AssignmentOperator::LogicalAnd },
+      AssignmentOperator::LogicalOr => quote! { AssignmentOperator::LogicalOr },
+      AssignmentOperator::LogicalNullish => quote! { AssignmentOperator::LogicalNullish },
+      AssignmentOperator::Exponential => quote! { AssignmentOperator::Exponential },
     }
   }
 }

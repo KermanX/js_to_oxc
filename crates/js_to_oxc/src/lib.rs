@@ -20,6 +20,7 @@ mod template_literal;
 mod utils;
 mod operator;
 mod vec;
+mod assignment;
 
 pub fn js_to_oxc(source: &str) -> String {
   let allocator = Allocator::default();
