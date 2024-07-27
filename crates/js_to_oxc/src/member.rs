@@ -26,14 +26,12 @@ impl JsToOxc {
         let expression = self.gen_expression(&node.expression);
         let optional = node.optional;
         quote! {
-            #ast_builder.expression_member(
-                #ast_builder.member_expression_computed(
-                  #span,
-                  #object,
-                  #expression,
-                  #optional,
-              )
-            )
+          #ast_builder.member_expression_computed(
+            #span,
+            #object,
+            #expression,
+            #optional,
+          )
         }
       }
       MemberExpression::PrivateFieldExpression(node) => {

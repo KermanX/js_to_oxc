@@ -11,6 +11,7 @@ use utils::unimplemented;
 mod array;
 mod assignment;
 mod bigint;
+mod chain;
 mod expr;
 mod member;
 mod number;
