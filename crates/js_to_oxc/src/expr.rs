@@ -189,7 +189,11 @@ impl JsToOxc {
       }
       Expression::SequenceExpression(_) => unimplemented(),
       Expression::TaggedTemplateExpression(_) => unimplemented(),
-      Expression::ThisExpression(_) => unimplemented(),
+      Expression::ThisExpression(_node) => {
+        quote! {
+          #ast_builder.expression_this(#span)
+        }
+      }
       Expression::UnaryExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
