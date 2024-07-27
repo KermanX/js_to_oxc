@@ -9,10 +9,9 @@ fn main() {
   let generated_root = root.join("generated");
   let src_root = generated_root.join("src");
 
-  if src_root.exists() {
-    fs::remove_dir_all(src_root.clone()).unwrap();
+  if !src_root.exists() {
+    fs::create_dir(src_root.clone()).unwrap();
   }
-  fs::create_dir(src_root.clone()).unwrap();
 
   let units = vec!["expr"];
 

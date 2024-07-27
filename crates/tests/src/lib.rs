@@ -22,6 +22,7 @@ pub fn generate_expr_tests(files: Paths) -> String {
     mod tests_expr {
       use oxc::ast::ast::*;
       use oxc::span::SPAN;
+      use oxc::syntax::number::{NumberBase, BigintBase};
 
       fn print_expr(expr: Expression) -> String {
         let mut codegen = oxc::codegen::CodeGenerator::new();
@@ -53,7 +54,7 @@ fn expr_file(name: &str, source: &str) -> TokenStream {
       codegen.print_expression(expr);
       let expected: String = codegen.into_source_text();
 
-      let name = format_ident!("{}_{}", name, i);
+      let name = format_ident!("{}_{}", name, i + 2);
 
       tokens.append_all(quote! {
         #[test]

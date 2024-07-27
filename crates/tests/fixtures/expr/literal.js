@@ -1,10 +1,16 @@
 [
   1,
-  -1,
   1e10,
+  0xFF,
+  0b1010,
+  122n,
+  0x1n,
   Infinity,
   NaN,
   "",
   "str",
-  "\0", 
+  "\0",
+  /re/g,
+  `template`,
+  `template ${1}`,
 ]
