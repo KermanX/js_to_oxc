@@ -10,13 +10,13 @@ impl JsToOxc {
     match node {
       MemberExpression::StaticMemberExpression(node) => {
         let object = self.gen_expression(&node.object);
-        let property = node.property.name.as_str();
+        let property = self.gen_identifier_name(&node.property);
         let optional = node.optional;
         quote! {
           #ast_builder.member_expression_static(
             #span,
             #object,
-            #ast_builder.identifier_name(#span, #property),
+            #property,
             #optional,
           )
         }

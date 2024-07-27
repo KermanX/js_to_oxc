@@ -62,7 +62,13 @@ impl JsToOxc {
         }
       }
 
-      Expression::MetaProperty(_) => unimplemented(),
+      Expression::MetaProperty(node) => {
+        let meta =self.gen_identifier_name(&node.meta);
+        let property = self.gen_identifier_name(&node.property);
+        quote! {
+            #ast_builder.expression_meta_property(#span, #meta, #property)
+        }
+      }
       Expression::Super(_node) => {
         quote! {
             #ast_builder.expression_super(#span)
