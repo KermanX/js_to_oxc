@@ -115,7 +115,16 @@ impl JsToOxc {
         }
       }
       Expression::ClassExpression(_) => unimplemented(),
-      Expression::ConditionalExpression(_) => unimplemented(),
+      Expression::ConditionalExpression(node) => {
+        let ast_builder = &self.ast_builder;
+        let span = &self.span;
+        let test = self.gen_expression(&node.test);
+        let consequent = self.gen_expression(&node.consequent);
+        let alternate = self.gen_expression(&node.alternate);
+        quote! {
+          #ast_builder.expression_conditional(#span, #test, #consequent, #alternate)
+        }
+      },
       Expression::FunctionExpression(_) => unimplemented(),
       Expression::ImportExpression(node) => {
         let source = self.gen_expression(&node.source);
