@@ -16,7 +16,10 @@ impl JsToOxc {
     }
   }
 
-  pub(crate) fn gen_simple_assignment_target(&self, target: &SimpleAssignmentTarget) -> TokenStream {
+  pub(crate) fn gen_simple_assignment_target(
+    &self,
+    target: &SimpleAssignmentTarget,
+  ) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     match target {
