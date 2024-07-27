@@ -73,7 +73,17 @@ impl JsToOxc {
             #ast_builder.expression_array(#span, #elements, #trailing_comma)
         }
       }
-      Expression::ArrowFunctionExpression(_) => unimplemented(),
+      Expression::ArrowFunctionExpression(node) => {
+        let expression = node.expression;
+        let r#async = node.r#async;
+        let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
+        let params = self.gen_formal_parameters(&node.params);
+        let return_type = quote! { Option::<TSTypeAnnotation>::None };
+        let body = self.gen_function_body(&node.body);
+        quote! {
+            #ast_builder.expression_arrow_function(#span, #expression, #r#async, #type_parameters, #params, #return_type, #body)
+        }
+      }
       Expression::AssignmentExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
