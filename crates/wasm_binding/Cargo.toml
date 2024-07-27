@@ -10,5 +10,7 @@ version = "0.0.1"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+oxc = { workspace = true }
 js_to_oxc = { workspace = true }
 wasm-bindgen = { workspace = true }
+quote = { workspace = true }

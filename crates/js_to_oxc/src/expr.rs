@@ -207,7 +207,13 @@ impl JsToOxc {
           #ast_builder.expression_update(#span, #operator, #prefix, #argument)
         }
       }
-      Expression::YieldExpression(_) => unimplemented(),
+      Expression::YieldExpression(node) => {
+        let delegate = node.delegate;
+        let argument = self.gen_option(&node.argument, |argument| self.gen_expression(argument));
+        quote! {
+          #ast_builder.expression_yield(#span, #delegate, #argument)
+        }
+      }
       Expression::PrivateInExpression(_) => unimplemented(),
 
       Expression::JSXElement(_) => unimplemented(),

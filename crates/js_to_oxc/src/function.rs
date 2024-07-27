@@ -66,7 +66,7 @@ impl JsToOxc {
     }
   }
 
-  fn gen_directive(&self, directive: &Directive) -> TokenStream {
+  pub(crate) fn gen_directive(&self, directive: &Directive) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let expression = self.gen_string_literal(&directive.expression);
