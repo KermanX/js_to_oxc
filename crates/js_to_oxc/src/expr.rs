@@ -136,7 +136,13 @@ impl JsToOxc {
           #ast_builder.expression_new(#span, #callee, #arguments, Option::<TSTypeParameterInstantiation>::None)
         }
       },
-      Expression::ObjectExpression(_) => unimplemented(),
+      Expression::ObjectExpression(node) => {
+        let properties = self.gen_vec(&node.properties, |prop| self.gen_object_property(prop));
+        let trailing_comma = self.gen_option(&node.trailing_comma, |_| quote! { #span });
+        quote! {
+          #ast_builder.expression_object(#span, #properties, #trailing_comma)
+        }
+      },
       Expression::ParenthesizedExpression(node) => {
         let expression = self.gen_expression(&node.expression);
         quote! {

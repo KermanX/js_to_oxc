@@ -15,6 +15,7 @@ mod chain;
 mod expr;
 mod member;
 mod number;
+mod object;
 mod operator;
 mod option;
 mod private_identifier;
