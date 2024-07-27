@@ -23,6 +23,7 @@ pub fn generate_expr_tests(files: Paths) -> String {
       use oxc::ast::ast::*;
       use oxc::span::SPAN;
       use oxc::syntax::number::{NumberBase, BigintBase};
+      use oxc::syntax::operator::*;
 
       fn print_expr(expr: Expression) -> String {
         let mut codegen = oxc::codegen::CodeGenerator::new();

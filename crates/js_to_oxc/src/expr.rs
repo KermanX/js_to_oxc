@@ -76,7 +76,16 @@ impl JsToOxc {
       Expression::ArrowFunctionExpression(_) => unimplemented(),
       Expression::AssignmentExpression(_) => unimplemented(),
       Expression::AwaitExpression(_) => unimplemented(),
-      Expression::BinaryExpression(_) => unimplemented(),
+      Expression::BinaryExpression(node) => {
+        let ast_builder = &self.ast_builder;
+        let span = &self.span;
+        let left = self.gen_expression(&node.left);
+        let right = self.gen_expression(&node.right);
+        let operator = self.gen_binary_operator(&node.operator);
+        quote! {
+          #ast_builder.expression_binary(#span, #left, #operator, #right)
+        }
+      }
       Expression::CallExpression(node) => {
         let arguments = self.gen_arguments(&node.arguments);
         let callee = self.gen_expression(&node.callee);
