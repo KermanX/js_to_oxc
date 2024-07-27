@@ -101,7 +101,7 @@ impl JsToOxc {
         }
       }
       Expression::CallExpression(node) => {
-        let arguments = self.gen_arguments(&node.arguments);
+        let arguments = self.gen_vec(&node.arguments, |argument| self.gen_argument(argument));
         let callee = self.gen_expression(&node.callee);
         let optional = node.optional;
         quote! {
@@ -159,7 +159,7 @@ impl JsToOxc {
       }
       Expression::NewExpression(node) => {
         let callee = self.gen_expression(&node.callee);
-        let arguments = self.gen_arguments(&node.arguments);
+        let arguments = self.gen_vec(&node.arguments, |argument| self.gen_argument(argument));
         quote! {
           #ast_builder.expression_new(#span, #callee, #arguments, Option::<TSTypeParameterInstantiation>::None)
         }

@@ -17,6 +17,7 @@ mod expr;
 mod function;
 mod identifier;
 mod literal;
+mod misc;
 mod member;
 mod number;
 mod object;
@@ -44,43 +45,10 @@ pub struct JsToOxc {
 }
 
 impl JsToOxc {
-  pub fn gen_program<'ast>(&self, node: &Program<'ast>) -> TokenStream {
+  pub fn gen_program(&self, node: &Program) -> TokenStream {
     let mut tokens = TokenStream::new();
     for stmt in &node.body {
       tokens.append_all(self.gen_statement(stmt));
-    }
-    tokens
-  }
-
-  fn gen_arguments<'ast>(&self, node: &Vec<'ast, Argument<'ast>>) -> TokenStream {
-    let mut arguments = TokenStream::new();
-    let ast_builder = &self.ast_builder;
-    for arg in node {
-      let arg = self.gen_argument(arg);
-      arguments.append_all(quote! {
-          __arguments.push(#arg);
-      });
-    }
-    quote! {
-        {
-            let mut __arguments = #ast_builder.vec();
-            #arguments
-            __arguments
-        }
-    }
-  }
-
-  fn gen_argument<'ast>(&self, node: &Argument<'ast>) -> TokenStream {
-    let mut tokens = TokenStream::new();
-    let ast_builder = &self.ast_builder;
-    match node {
-      Argument::SpreadElement(_node) => tokens.append_all(unimplemented()),
-      _ => {
-        let expr = self.gen_expression(node.to_expression());
-        tokens.append_all(quote! {
-            #ast_builder.argument_expression(#expr),
-        });
-      }
     }
     tokens
   }

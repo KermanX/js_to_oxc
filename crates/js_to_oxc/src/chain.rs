@@ -8,7 +8,7 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     if let ChainElement::CallExpression(node) = element {
-      let arguments = self.gen_arguments(&node.arguments);
+      let arguments = self.gen_vec(&node.arguments, |argument| self.gen_argument(argument));
       let callee = self.gen_expression(&node.callee);
       let optional = node.optional;
       quote! {
