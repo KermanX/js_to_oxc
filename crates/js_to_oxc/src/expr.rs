@@ -112,7 +112,13 @@ impl JsToOxc {
       Expression::ClassExpression(_) => unimplemented(),
       Expression::ConditionalExpression(_) => unimplemented(),
       Expression::FunctionExpression(_) => unimplemented(),
-      Expression::ImportExpression(_) => unimplemented(),
+      Expression::ImportExpression(node) => {
+        let source = self.gen_expression(&node.source);
+        let arguments = self.gen_vec(&node.arguments, |expr| self.gen_expression(expr));
+        quote! {
+          #ast_builder.expression_import(#span, #source, #arguments)
+        }
+      }
       Expression::LogicalExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
