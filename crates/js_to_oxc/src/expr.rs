@@ -63,7 +63,7 @@ impl JsToOxc {
       }
 
       Expression::MetaProperty(node) => {
-        let meta =self.gen_identifier_name(&node.meta);
+        let meta = self.gen_identifier_name(&node.meta);
         let property = self.gen_identifier_name(&node.property);
         quote! {
             #ast_builder.expression_meta_property(#span, #meta, #property)
@@ -197,7 +197,13 @@ impl JsToOxc {
           #ast_builder.expression_parenthesized(#span, #expression)
         }
       }
-      Expression::SequenceExpression(_) => unimplemented(),
+      Expression::SequenceExpression(node) => {
+        let expressions = self.gen_vec(&node.expressions, |expr| self.gen_expression(expr));
+
+        quote! {
+          #ast_builder.expression_sequence(#span, #expressions)
+        }
+      }
       Expression::TaggedTemplateExpression(_) => unimplemented(),
       Expression::ThisExpression(_node) => {
         quote! {
