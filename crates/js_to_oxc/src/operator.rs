@@ -1,4 +1,4 @@
-use oxc::syntax::operator::{BinaryOperator, LogicalOperator};
+use oxc::syntax::operator::{BinaryOperator, LogicalOperator, UnaryOperator};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -37,6 +37,18 @@ impl JsToOxc {
       LogicalOperator::Or => quote! { LogicalOperator::Or },
       LogicalOperator::And => quote! { LogicalOperator::And },
       LogicalOperator::Coalesce => quote! { LogicalOperator::Coalesce },
+    }
+  }
+
+  pub(crate) fn gen_unary_operator(&self, operator: &UnaryOperator) -> TokenStream {
+    match operator {
+      UnaryOperator::UnaryNegation => quote! { UnaryOperator::UnaryNegation },
+      UnaryOperator::UnaryPlus => quote! { UnaryOperator::UnaryPlus },
+      UnaryOperator::LogicalNot => quote! { UnaryOperator::LogicalNot },
+      UnaryOperator::BitwiseNot => quote! { UnaryOperator::BitwiseNot },
+      UnaryOperator::Typeof => quote! { UnaryOperator::Typeof },
+      UnaryOperator::Void => quote! { UnaryOperator::Void },
+      UnaryOperator::Delete => quote! { UnaryOperator::Delete },
     }
   }
 }

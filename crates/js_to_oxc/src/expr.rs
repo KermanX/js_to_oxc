@@ -115,7 +115,15 @@ impl JsToOxc {
       Expression::SequenceExpression(_) => unimplemented(),
       Expression::TaggedTemplateExpression(_) => unimplemented(),
       Expression::ThisExpression(_) => unimplemented(),
-      Expression::UnaryExpression(_) => unimplemented(),
+      Expression::UnaryExpression(node) => {
+        let ast_builder = &self.ast_builder;
+        let span = &self.span;
+        let operator = self.gen_unary_operator(&node.operator);
+        let argument = self.gen_expression(&node.argument);
+        quote! {
+          #ast_builder.expression_unary(#span, #operator, #argument)
+        }
+      }
       Expression::UpdateExpression(_) => unimplemented(),
       Expression::YieldExpression(_) => unimplemented(),
       Expression::PrivateInExpression(_) => unimplemented(),

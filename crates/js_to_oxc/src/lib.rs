@@ -18,7 +18,7 @@ mod private_identifier;
 mod regexp;
 mod template_literal;
 mod utils;
-mod operators;
+mod operator;
 mod vec;
 
 pub fn js_to_oxc(source: &str) -> String {
