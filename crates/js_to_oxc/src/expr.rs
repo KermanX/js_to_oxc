@@ -129,7 +129,13 @@ impl JsToOxc {
           #ast_builder.expression_logical(#span, #left, #operator, #right)
         }
       }
-      Expression::NewExpression(_) => unimplemented(),
+      Expression::NewExpression(node) => {
+        let callee = self.gen_expression(&node.callee);
+        let arguments = self.gen_arguments(&node.arguments);
+        quote! {
+          #ast_builder.expression_new(#span, #callee, #arguments, Option::<TSTypeParameterInstantiation>::None)
+        }
+      },
       Expression::ObjectExpression(_) => unimplemented(),
       Expression::ParenthesizedExpression(_) => unimplemented(),
       Expression::SequenceExpression(_) => unimplemented(),
