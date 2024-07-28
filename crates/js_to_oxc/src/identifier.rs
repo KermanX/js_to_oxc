@@ -1,5 +1,7 @@
 use crate::JsToOxc;
-use oxc::ast::ast::{BindingIdentifier, IdentifierName, LabelIdentifier, PrivateIdentifier};
+use oxc::ast::ast::{
+  BindingIdentifier, IdentifierName, IdentifierReference, LabelIdentifier, PrivateIdentifier,
+};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -37,6 +39,18 @@ impl JsToOxc {
     let name = identifier.name.as_str();
     quote! {
       #ast_builder.private_identifier(
+        #span,
+        #name,
+      )
+    }
+  }
+
+  pub(crate) fn gen_identifier_reference(&self, identifier: &IdentifierReference) -> TokenStream {
+    let ast_builder = &self.ast_builder;
+    let span = &self.span;
+    let name = identifier.name.as_str();
+    quote! {
+      #ast_builder.identifier_reference(
         #span,
         #name,
       )
