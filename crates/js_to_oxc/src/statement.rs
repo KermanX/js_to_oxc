@@ -4,7 +4,7 @@ use proc_macro2::TokenStream;
 use quote::quote;
 
 impl JsToOxc {
-  pub(crate) fn gen_statement(&self, node: &Statement) -> TokenStream {
+  pub fn gen_statement(&self, node: &Statement) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     match node {

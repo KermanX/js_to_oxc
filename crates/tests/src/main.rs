@@ -1,5 +1,6 @@
 use glob::glob;
-use js_to_oxc_tests::generate_expr_tests;
+use js_to_oxc_tests::{generate_expr_tests, generate_stmt_tests, generate_tests};
+use proc_macro2::TokenStream;
 use std::fs;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
@@ -14,15 +15,16 @@ fn main() {
     fs::create_dir(src_root.clone()).unwrap();
   }
 
-  let units = vec!["expr"];
+  let units: Vec<(&str, fn(&str, &str) -> TokenStream)> =
+    vec![("expr", generate_expr_tests), ("stmt", generate_stmt_tests)];
 
-  for unit in &units {
-    let files = glob(fixture_root.join(unit).join("*.js").to_str().unwrap()).unwrap();
-    fs::write(src_root.join(format!("{unit}.rs")), generate_expr_tests(files)).unwrap();
+  for (name, generator) in &units {
+    let files = glob(fixture_root.join(name).join("*.js").to_str().unwrap()).unwrap();
+    fs::write(src_root.join(format!("{name}.rs")), generate_tests(name, files, generator)).unwrap();
   }
 
   let lib_mod =
-    units.iter().map(|unit| format!("mod {};", unit)).collect::<Vec<String>>().join("\n");
+    units.iter().map(|(name, _)| format!("mod {};", name)).collect::<Vec<String>>().join("\n");
   fs::write(src_root.join("lib.rs"), lib_mod).unwrap();
 
   Command::new("cargo")

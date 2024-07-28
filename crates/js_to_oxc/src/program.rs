@@ -18,7 +18,7 @@ impl JsToOxc {
 
   fn gen_source_type(&self) -> TokenStream {
     quote! {
-      SourceType::default()::with_module(true)
+      SourceType::default().with_module(true)
     }
   }
 

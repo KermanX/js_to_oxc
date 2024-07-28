@@ -7,21 +7,26 @@ use oxc::{
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote, TokenStreamExt};
 
-pub fn generate_expr_tests(files: Paths) -> String {
+pub fn generate_tests<M>(name: &str, files: Paths, generator: M) -> String
+where
+  M: Fn(&str, &str) -> TokenStream,
+{
   let mut tokens = TokenStream::new();
 
   for file in files {
     let file = file.unwrap();
     let name = file.file_stem().unwrap().to_str().unwrap();
     let source = std::fs::read_to_string(file.clone()).unwrap();
-    tokens.append_all(expr_file(name, &source));
+    tokens.append_all(generator(name, &source));
   }
+
+  let mod_name = format_ident!("tests_{}", name);
 
   tokens = quote! {
     #[cfg(test)]
-    mod tests_expr {
+    mod #mod_name {
       use oxc::ast::ast::*;
-      use oxc::span::SPAN;
+      use oxc::span::{SourceType, SPAN};
       use oxc::syntax::number::{NumberBase, BigintBase};
       use oxc::syntax::operator::*;
 
@@ -31,6 +36,11 @@ pub fn generate_expr_tests(files: Paths) -> String {
         codegen.into_source_text()
       }
 
+      fn print_program(program: Program) -> String {
+        let codegen = oxc::codegen::CodeGenerator::new();
+        codegen.build(&program).source_text
+      }
+
       #tokens
     }
   };
@@ -38,7 +48,7 @@ pub fn generate_expr_tests(files: Paths) -> String {
   tokens.to_string()
 }
 
-fn expr_file(name: &str, source: &str) -> TokenStream {
+pub fn generate_expr_tests(name: &str, source: &str) -> TokenStream {
   let allocator = Allocator::default();
   let parser = Parser::new(&allocator, source, SourceType::default().with_module(true));
   let expr_arr = parser.parse_expression().unwrap();
@@ -72,4 +82,29 @@ fn expr_file(name: &str, source: &str) -> TokenStream {
   }
 
   tokens
+}
+
+pub fn generate_stmt_tests(name: &str, source: &str) -> TokenStream {
+  let allocator = Allocator::default();
+  let parser = Parser::new(&allocator, source, SourceType::default().with_module(true));
+  let program = parser.parse().program;
+
+  let js_to_oxc = JsToOxc { ast_builder: quote! { ast_builder }, span: quote! { SPAN } };
+
+  let code = js_to_oxc.gen_program(&program);
+
+  let codegen = CodeGenerator::new();
+  let expected = codegen.build(&program).source_text;
+
+  let name = format_ident!("{}", name);
+
+  quote! {
+    #[test]
+    fn #name() {
+      let allocator = oxc::allocator::Allocator::default();
+      let ast_builder = oxc::ast::AstBuilder::new(&allocator);
+      let actual = { #code };
+      assert_eq!(print_program(actual), #expected);
+    }
+  }
 }
