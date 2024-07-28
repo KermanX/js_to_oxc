@@ -27,3 +27,11 @@ switch (a) {
     f(2)
 }
 throw x + y
+try {
+  f(1)
+} catch ([e]) {
+  f(2)
+} finally {
+  f(3)
+}
+

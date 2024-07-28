@@ -2,6 +2,8 @@ mod array;
 mod assignment;
 mod bigint;
 mod binding;
+mod block;
+mod catch;
 mod chain;
 mod class;
 mod declaration;

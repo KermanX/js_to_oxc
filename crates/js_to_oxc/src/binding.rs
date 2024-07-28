@@ -36,7 +36,9 @@ impl JsToOxc {
         let elements = self.gen_vec(&pattern.elements, |element| {
           self.gen_option(element, |element| self.gen_binding_pattern(element))
         });
-        let rest = self.gen_option(&pattern.rest, |rest| self.gen_binding_rest_element(rest));
+        let rest = self.gen_option_with_type(&pattern.rest, "BindingRestElement", |rest| {
+          self.gen_binding_rest_element(rest)
+        });
         quote! {
           #ast_builder.binding_pattern_kind_array_pattern(#span, #elements, #rest)
         }
