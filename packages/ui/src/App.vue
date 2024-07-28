@@ -47,11 +47,7 @@ const error = ref('')
 const controller = shallowRef<AbortController>()
 
 async function run() {
-  const unformatted = `impl _ {
-    fn create_ast(&self) {
-      ${(programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)}
-    }
-  }`
+  const unformatted = (programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)
   controller.value?.abort()
   const { signal } = controller.value = new AbortController()
   try {
