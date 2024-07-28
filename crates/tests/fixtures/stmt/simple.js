@@ -18,3 +18,4 @@ if (a < b) {
 } else {
   f(2)
 }
+label: 1

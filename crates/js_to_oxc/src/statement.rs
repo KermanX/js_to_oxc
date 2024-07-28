@@ -83,7 +83,13 @@ impl JsToOxc {
           #ast_builder.statement_if(#span, #test, #consequent, #alternate)
         }
       }
-      Statement::LabeledStatement(_) => unimplemented(),
+      Statement::LabeledStatement(node) => {
+        let label = self.gen_label_identifier(&node.label);
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_labeled(#span, #label, #body)
+        }
+      }
       Statement::ReturnStatement(node) => {
         let argument = self.gen_option(&node.argument, |argument| self.gen_expression(argument));
         quote! {
