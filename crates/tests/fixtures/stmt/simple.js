@@ -1,3 +1,3 @@
-function hello() {
-  console.log("Hello, world!");
-}
+do {
+  f(1)
+} while (a < b)

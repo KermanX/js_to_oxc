@@ -11,30 +11,36 @@ impl JsToOxc {
       Statement::BlockStatement(node) => {
         let body = self.gen_vec(&node.body, |statement| self.gen_statement(statement));
         quote! {
-          #ast_builder.block_statement(#span, #body)
+          #ast_builder.statement_block(#span, #body)
         }
       }
       Statement::BreakStatement(node) => {
         let label = self.gen_option(&node.label, |label| self.gen_label_identifier(label));
         quote! {
-          #ast_builder.break_statement(#span, #label)
+          #ast_builder.statement_break(#span, #label)
         }
       }
       Statement::ContinueStatement(node) => {
         let label = self.gen_option(&node.label, |label| self.gen_label_identifier(label));
         quote! {
-          #ast_builder.continue_statement(#span, #label)
+          #ast_builder.statement_continue(#span, #label)
         }
       }
       Statement::DebuggerStatement(_) => {
         quote! {
-          #ast_builder.debugger_statement(#span)
+          #ast_builder.statement_debugger(#span)
         }
       }
-      Statement::DoWhileStatement(_) => unimplemented(),
+      Statement::DoWhileStatement(node) => {
+        let body = self.gen_statement(&node.body);
+        let test = self.gen_expression(&node.test);
+        quote! {
+          #ast_builder.statement_do_while(#span, #body, #test)
+        }
+      }
       Statement::EmptyStatement(_) => {
         quote! {
-          #ast_builder.empty_statement(#span)
+          #ast_builder.statement_empty(#span)
         }
       }
       Statement::ExpressionStatement(node) => {
