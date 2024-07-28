@@ -5,10 +5,12 @@ import { ref, shallowRef } from 'vue'
 import Editor from './Editor.vue'
 import { formatRust } from './format'
 
-const js = ref('console.log("Hello, World!")')
+const js = useLocalStorage('js_to_oxc:source', 'console.log("Hello, World!")\n')
 const autoRun = useLocalStorage('js_to_oxc:autoRun', true)
 const shouldFormat = useLocalStorage('js_to_oxc:shouldFormat', true)
 const programMode = useLocalStorage('js_to_oxc:programMode', true)
+const astBuilder = useLocalStorage('js_to_oxc:astBuilder', 'self.ast_builder')
+const span = useLocalStorage('js_to_oxc:span', 'SPAN')
 
 const formatted = ref('')
 const formatting = ref(false)
@@ -18,7 +20,7 @@ const controller = shallowRef<AbortController>()
 async function run() {
   const unformatted = `impl _ {
     fn create_ast(&self) {
-      ${(programMode.value ? generate_program : generate_expression)(js.value)}
+      ${(programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)}
     }
   }`
   controller.value?.abort()
@@ -52,7 +54,7 @@ async function run() {
 }
 
 debouncedWatch(
-  () => autoRun.value && [js.value, shouldFormat.value, programMode.value],
+  () => autoRun.value && [js.value, shouldFormat.value, programMode.value, astBuilder.value, span.value],
   shouldRun => shouldRun && run(),
   { immediate: true, debounce: 300 },
 )
@@ -60,8 +62,8 @@ debouncedWatch(
 
 <template>
   <div py-2 md:py-4 fixed inset-0 flex flex-col>
-    <div px-4 flex>
-      <h1 text-xl md:text-3xl font-bold pb-2 md:pb-4 select-none flex flex-wrap items-start gap-x-2>
+    <div px-4 flex flex-wrap gap-x-2 pb-2>
+      <h1 text-xl md:text-3xl font-bold md:pb-2 select-none flex flex-wrap items-start gap-x-2>
         JS to Oxc
         <div text-sm self-end flex items-center gap-1 op-80>
           Convert JS to Oxc AST builder
@@ -69,7 +71,15 @@ debouncedWatch(
         </div>
       </h1>
       <div flex-grow />
-      <div flex md:flex-col h-min md:h-0 z-10 gap-x-2>
+      <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1 font-mono>
+        <label flex align-center gap-1 select-none>
+          <input v-model="astBuilder" type="text" placeholder="ast_builder" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="astBuilder ||= 'self.ast_builder'">
+        </label>
+        <label flex align-center gap-1 select-none>
+          <input v-model="span" type="text" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="span ||= 'SPAN'">
+        </label>
+      </div>
+      <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1>
         <label flex align-center gap-1 select-none>
           <input v-model="autoRun" type="checkbox">
           Auto Run
@@ -104,7 +114,7 @@ debouncedWatch(
         </h2>
         <div flex-grow relative max-h-full>
           <Editor v-model="formatted" lang="rust" readonly class="w-full h-full max-h-full" />
-          <div z-20 absolute left-1 right-1 bottom-0 children:p-2 children:px-3 children:b-2 children:rounded>
+          <div z-20 absolute left-1 right-2 bottom--2 children:p-2 children:px-3 children:b-2 children:rounded>
             <div v-if="error" text-red-200 bg-red-900 bg-op-80 b-red-500>
               <h3 text-lg pb-1>
                 Error
