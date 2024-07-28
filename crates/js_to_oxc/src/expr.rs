@@ -1,4 +1,3 @@
-use crate::utils::unimplemented;
 use crate::JsToOxc;
 use oxc::ast::ast::*;
 use proc_macro2::TokenStream;
@@ -265,14 +264,14 @@ impl JsToOxc {
         }
       }
 
-      Expression::JSXElement(_) => unimplemented(),
-      Expression::JSXFragment(_) => unimplemented(),
+      Expression::JSXElement(_) => unimplemented!("jsx"),
+      Expression::JSXFragment(_) => unimplemented!("jsx"),
 
-      Expression::TSAsExpression(_) => unimplemented(),
-      Expression::TSSatisfiesExpression(_) => unimplemented(),
-      Expression::TSTypeAssertion(_) => unimplemented(),
-      Expression::TSNonNullExpression(_) => unimplemented(),
-      Expression::TSInstantiationExpression(_) => unimplemented(),
+      Expression::TSAsExpression(_) => unimplemented!("ts"),
+      Expression::TSSatisfiesExpression(_) => unimplemented!("ts"),
+      Expression::TSTypeAssertion(_) => unimplemented!("ts"),
+      Expression::TSNonNullExpression(_) => unimplemented!("ts"),
+      Expression::TSInstantiationExpression(_) => unimplemented!("ts"),
 
       _ => {
         let member_expr = self.gen_member_expression(node.to_member_expression());

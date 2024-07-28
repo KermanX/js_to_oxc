@@ -1,4 +1,4 @@
-use crate::{utils::unimplemented, JsToOxc};
+use crate::JsToOxc;
 use oxc::ast::ast::{
   AccessorPropertyType, ClassBody, ClassElement, ClassType, MethodDefinitionKind,
   MethodDefinitionType, PropertyDefinitionType,
@@ -118,7 +118,7 @@ impl JsToOxc {
           )
         }
       }
-      ClassElement::TSIndexSignature(_) => unimplemented(),
+      ClassElement::TSIndexSignature(_) => unimplemented!("ts"),
     }
   }
 

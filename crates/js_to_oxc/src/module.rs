@@ -1,4 +1,3 @@
-use crate::utils::unimplemented;
 use crate::JsToOxc;
 use oxc::ast::ast::{
   ExportDefaultDeclarationKind, ExportSpecifier, ImportAttribute, ImportAttributeKey,
@@ -78,7 +77,7 @@ impl JsToOxc {
           )
         }
       }
-      _ => unimplemented(),
+      _ => unimplemented!("ts"),
     }
   }
 
@@ -277,7 +276,7 @@ impl JsToOxc {
           )
         }
       }
-      ExportDefaultDeclarationKind::TSInterfaceDeclaration(_) => unimplemented(),
+      ExportDefaultDeclarationKind::TSInterfaceDeclaration(_) => unimplemented!("ts"),
       _ => {
         let node = node.to_expression();
         let inner = self.gen_expression(node);

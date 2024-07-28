@@ -1,4 +1,4 @@
-use crate::{utils::unimplemented, JsToOxc};
+use crate::JsToOxc;
 use oxc::ast::ast::{Declaration, VariableDeclarationKind, VariableDeclarator};
 use proc_macro2::TokenStream;
 use quote::quote;
@@ -56,7 +56,7 @@ impl JsToOxc {
           #ast_builder.declaration_using(#span, #is_await, #declarations)
         }
       }
-      _ => unimplemented(),
+      _ => unimplemented!("ts"),
     }
   }
 

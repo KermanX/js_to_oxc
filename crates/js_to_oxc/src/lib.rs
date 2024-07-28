@@ -24,7 +24,6 @@ mod regexp;
 mod statement;
 mod switch;
 mod template_literal;
-mod utils;
 mod vec;
 
 use proc_macro2::TokenStream;
