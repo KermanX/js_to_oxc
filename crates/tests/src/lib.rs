@@ -6,17 +6,22 @@ use oxc::{
 };
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote, TokenStreamExt};
+use std::env;
 
 pub fn generate_tests<M>(name: &str, files: Paths, generator: M) -> String
 where
   M: Fn(&str, &str) -> TokenStream,
 {
   let mut tokens = TokenStream::new();
+  let run_complex = env::var("COMPLEX_TESTS").is_ok();
 
   for file in files {
     let file = file.unwrap();
     let name = file.file_stem().unwrap().to_str().unwrap();
     let source = std::fs::read_to_string(file.clone()).unwrap();
+    if !run_complex && source.contains("@js_to_oxc:complex") {
+      continue;
+    }
     tokens.append_all(generator(name, &source));
   }
 
