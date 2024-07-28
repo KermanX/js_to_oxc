@@ -47,12 +47,13 @@ const error = ref('')
 const controller = shallowRef<AbortController>()
 
 async function run() {
-  const unformatted = (programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)
+  const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)
   controller.value?.abort()
   const { signal } = controller.value = new AbortController()
+  error.value = errors || ''
+  formatted.value = unformatted
+  formatting.value = false
   try {
-    error.value = ''
-    formatted.value = unformatted
     if (shouldFormat.value) {
       formatting.value = true
       formatRust(unformatted, signal).then((result) => {
@@ -81,8 +82,9 @@ async function run() {
 debouncedWatch(
   () => autoRun.value && [js.value, shouldFormat.value, programMode.value, astBuilder.value, span.value],
   shouldRun => shouldRun && run(),
-  { immediate: true, debounce: 300 },
+  { debounce: 300 },
 )
+run()
 </script>
 
 <template>
@@ -150,24 +152,25 @@ debouncedWatch(
         </h2>
         <div flex-grow relative max-h-full>
           <Editor v-model="formatted" lang="rust" readonly class="w-full h-full max-h-full" />
-          <div z-20 absolute left-1 right-2 bottom--2 children:p-2 children:px-3 children:b-2 children:rounded>
-            <div v-if="error" text-red-200 bg-red-900 bg-op-80 b-red-500>
+          <div z-20 absolute left-1 right-2 bottom--2 children:p-2 children:px-3 children:b-2 children:rounded flex flex-col gap-2>
+            <div v-if="error" relative text-red-200 bg-red-900 bg-op-80 b-red-500>
               <h3 text-lg pb-1>
                 Error
               </h3>
               <div font-mono>
                 {{ error }}
               </div>
+              <button v-if="error || formatting" absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="error = ''" />
             </div>
-            <div v-if="formatting" text-gray-300 bg-gray-900 bg-op-80 b-gray-500>
+            <div v-if="formatting" relative text-gray-300 bg-gray-900 bg-op-80 b-gray-500>
               <h3 text-lg pb-1>
                 Running
               </h3>
               <div font-mono>
                 Formatting Rust code...
               </div>
+              <button v-if="error || formatting" absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="formatting = false" />
             </div>
-            <button v-if="error || formatting" absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="error = ''; formatting = false" />
           </div>
         </div>
       </div>

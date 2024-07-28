@@ -7,7 +7,7 @@ export async function formatRust(source: string, signal: AbortSignal) {
       'accept': '*/*',
       'content-type': 'application/json',
     },
-    body: JSON.stringify({ channel: 'stable', edition: '2018', code: start + source + end }),
+    body: JSON.stringify({ channel: 'stable', edition: '2021', code: start + source + end }),
     method: 'POST',
     mode: 'cors',
     credentials: 'omit',
