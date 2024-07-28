@@ -8,7 +8,7 @@ import { formatRust } from './format'
 const js = ref('console.log("Hello, World!")')
 const autoRun = useLocalStorage('js_to_oxc:autoRun', true)
 const shouldFormat = useLocalStorage('js_to_oxc:shouldFormat', true)
-const programMode = useLocalStorage('js_to_oxc:programMode', false)
+const programMode = useLocalStorage('js_to_oxc:programMode', true)
 
 const formatted = ref('')
 const formatting = ref(false)
@@ -59,54 +59,52 @@ debouncedWatch(
 </script>
 
 <template>
-  <div py-4 fixed inset-0 flex flex-col>
+  <div py-2 md:py-4 fixed inset-0 flex flex-col>
     <div px-4 flex>
-      <h1 text-3xl font-bold pb-4 select-none>
+      <h1 text-xl md:text-3xl font-bold pb-2 md:pb-4 select-none flex flex-wrap items-start gap-x-2>
         JS to Oxc
+        <div text-sm self-end flex items-center gap-1 op-80>
+          Convert JS to Oxc AST builder
+          <a i-carbon-logo-github flex-grow inline-block w-1.2em h-1.2em hover:op-80 href="https://github.com/KermanX/js_to_oxc" target="_blank" />
+        </div>
       </h1>
       <div flex-grow />
-      <div flex flex-col h-0 z-10>
-        <div select-none>
-          Options
-        </div>
-        <div flex-grow text-sm>
-          <label flex align-center gap-1 select-none>
-            <input v-model="autoRun" type="checkbox">
-            Auto Run
-          </label>
-          <label flex align-center gap-1 select-none>
-            <input v-model="shouldFormat" type="checkbox">
-            Format Rust
-          </label>
-        </div>
+      <div flex md:flex-col h-min md:h-0 z-10 gap-x-2>
+        <label flex align-center gap-1 select-none>
+          <input v-model="autoRun" type="checkbox">
+          Auto Run
+        </label>
+        <label flex align-center gap-1 select-none>
+          <input v-model="shouldFormat" type="checkbox">
+          Format Rust
+        </label>
       </div>
     </div>
-    <div flex-grow grid grid-cols-2 gap-6>
-      <div flex flex-col>
+    <div flex-grow flex flex-col md:flex-row gap-x-6 gap-y-2>
+      <div flex-grow h-0 md:h-full md:w-0 flex flex-col>
         <div flex items-center>
-          <h2 text-2xl pb-2 pl-4 select-none>
+          <h2 md:text-xl pb-2 pl-4 select-none>
             Input JS
+            <button md:text-lg underline underline-dotted underline-white underline-offset-3 underline-op60 bg-gray-700 hover:bg-gray-600 px-2 py-1 my--1 rounded-lg @click="programMode = !programMode">
+              {{ programMode ? 'Program' : 'Expression' }}
+            </button>
           </h2>
           <div flex-grow />
-          <label flex align-center gap-1>
-            <input v-model="programMode" type="checkbox">
-            Program Mode
-          </label>
           <div>
-            <button bg-gray-400 bg-op-40 px-3 rounded hover:bg-op-50 select-none @click="run">
+            <button v-if="!autoRun" bg-gray-400 bg-op-40 py-.5 px-2.5 mr-2 md:mr-0 rounded hover:bg-op-50 select-none @click="run">
               Run
             </button>
           </div>
         </div>
-        <Editor v-model="js" lang="javascript" class="w-full h-full" />
+        <Editor v-model="js" lang="javascript" class="flex-grow h-0 max-h-full" />
       </div>
-      <div flex flex-col>
-        <h2 text-2xl pb-2 pl-4 select-none>
+      <div flex-grow h-0 md:h-full md:w-0 flex flex-col>
+        <h2 md:text-xl pb-2 pl-4 select-none>
           Output RS
         </h2>
-        <div flex-grow relative>
-          <Editor v-model="formatted" lang="rust" readonly class="w-full h-full" />
-          <div z-20 absolute left-1 right-1 top-0 children:p-2 children:px-3 children:b-2 children:rounded>
+        <div flex-grow relative max-h-full>
+          <Editor v-model="formatted" lang="rust" readonly class="w-full h-full max-h-full" />
+          <div z-20 absolute left-1 right-1 bottom-0 children:p-2 children:px-3 children:b-2 children:rounded>
             <div v-if="error" text-red-200 bg-red-900 bg-op-80 b-red-500>
               <h3 text-lg pb-1>
                 Error
