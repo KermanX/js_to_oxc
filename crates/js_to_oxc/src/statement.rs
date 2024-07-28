@@ -56,7 +56,7 @@ impl JsToOxc {
         quote! {
           #ast_builder.statement_for_in(#span, #left, #right, #body)
         }
-      },
+      }
       Statement::ForOfStatement(node) => {
         let r#await = node.r#await;
         let left = self.gen_for_statement_left(&node.left);
@@ -65,7 +65,7 @@ impl JsToOxc {
         quote! {
           #ast_builder.statement_for_of(#span, #r#await, #left, #right, #body)
         }
-      },
+      }
       Statement::ForStatement(node) => {
         let init = self.gen_option(&node.init, |init| self.gen_for_statement_init(init));
         let test = self.gen_option(&node.test, |test| self.gen_expression(test));
