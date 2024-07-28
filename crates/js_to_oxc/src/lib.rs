@@ -5,6 +5,7 @@ mod binding;
 mod chain;
 mod expr;
 mod function;
+mod class;
 mod identifier;
 mod literal;
 mod member;

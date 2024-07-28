@@ -1,11 +1,32 @@
 use crate::JsToOxc;
 use oxc::ast::ast::{
-  Directive, FormalParameter, FormalParameterKind, FormalParameters, FunctionBody, FunctionType,
+  Directive, FormalParameter, FormalParameterKind, FormalParameters, Function, FunctionBody,
+  FunctionType,
 };
 use proc_macro2::TokenStream;
 use quote::quote;
 
 impl JsToOxc {
+  pub(crate) fn gen_function(&self, function: &Function) -> TokenStream {
+    let ast_builder = &self.ast_builder;
+    let span = &self.span;
+    let r#type = self.gen_function_type(&function.r#type);
+    let id = self.gen_option_with_type(&function.id, "BindingIdentifier", |id| {
+      self.gen_binding_identifier(id)
+    });
+    let generator = function.generator;
+    let r#async = function.r#async;
+    let declare = function.declare;
+    let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
+    let this_param = quote! { Option::<TSThisParameter>::None };
+    let params = self.gen_formal_parameters(&function.params);
+    let return_type = quote! { Option::<TSTypeAnnotation>::None };
+    let body = self.gen_option(&function.body, |body| self.gen_function_body(body));
+    quote! {
+      #ast_builder.function(#r#type, #span, #id, #generator, #r#async, #declare, #type_parameters, #this_param, #params, #return_type, #body)
+    }
+  }
+
   pub(crate) fn gen_function_type(&self, r#type: &FunctionType) -> TokenStream {
     match r#type {
       FunctionType::FunctionDeclaration => quote! { FunctionType::FunctionDeclaration },

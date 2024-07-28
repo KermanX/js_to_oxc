@@ -134,7 +134,22 @@ impl JsToOxc {
           #ast_builder.expression_chain(#span, #expression)
         }
       }
-      Expression::ClassExpression(_) => unimplemented(),
+      Expression::ClassExpression(node) => {
+        let r#type = self.gen_class_type(&node.r#type);
+        let decorators = quote! { #ast_builder.vec() };
+        let id = self.gen_option(&node.id, |id| self.gen_binding_identifier(id));
+        let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
+        let super_class =
+          self.gen_option(&node.super_class, |super_class| self.gen_expression(super_class));
+        let super_type_parameters = quote! { Option::<TSTypeParameterInstantiation>::None };
+        let implements = quote! { None };
+        let body = self.gen_class_body(&node.body);
+        let r#abstract = node.r#abstract;
+        let declare = node.declare;
+        quote! {
+          #ast_builder.expression_class(#r#type, #span, #decorators, #id, #type_parameters, #super_class, #super_type_parameters, #implements, #body, #r#abstract, #declare)
+        }
+      }
       Expression::ConditionalExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
