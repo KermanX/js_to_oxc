@@ -49,9 +49,32 @@ impl JsToOxc {
           #ast_builder.statement_expression(#span, #expression)
         }
       }
-      Statement::ForInStatement(_) => unimplemented(),
-      Statement::ForOfStatement(_) => unimplemented(),
-      Statement::ForStatement(_) => unimplemented(),
+      Statement::ForInStatement(node) => {
+        let left = self.gen_for_statement_left(&node.left);
+        let right = self.gen_expression(&node.right);
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_for_in(#span, #left, #right, #body)
+        }
+      },
+      Statement::ForOfStatement(node) => {
+        let r#await = node.r#await;
+        let left = self.gen_for_statement_left(&node.left);
+        let right = self.gen_expression(&node.right);
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_for_of(#span, #r#await, #left, #right, #body)
+        }
+      },
+      Statement::ForStatement(node) => {
+        let init = self.gen_option(&node.init, |init| self.gen_for_statement_init(init));
+        let test = self.gen_option(&node.test, |test| self.gen_expression(test));
+        let update = self.gen_option(&node.update, |update| self.gen_expression(update));
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_for(#span, #init, #test, #update, #body)
+        }
+      }
       Statement::IfStatement(_) => unimplemented(),
       Statement::LabeledStatement(_) => unimplemented(),
       Statement::ReturnStatement(node) => {

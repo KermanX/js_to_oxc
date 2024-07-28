@@ -25,7 +25,7 @@ impl JsToOxc {
       _ => {
         let expr = self.gen_expression(element.to_expression());
         quote! {
-          #ast_builder.array_expression_element_expression(#span, #expr)
+          #ast_builder.array_expression_element_expression(#expr)
         }
       }
     }
