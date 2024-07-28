@@ -12,7 +12,7 @@ export async function formatRust(source: string, signal: AbortSignal) {
   })
   const data = await response.json()
   if (!data.success) {
-    throw data.exitDetail ? new Error(`${data.exitDetail}\n${data.stderr}`) : new Error(`${response.status} ${response.statusText}`)
+    throw data.exitDetail ? new Error(`Formatter error: ${data.exitDetail}\n${data.stderr}`) : new Error(`Formatter error: ${response.status} ${response.statusText}`)
   }
   const code: string = data.code
   return code.replaceAll(/^ {2,}/gm, all => all.slice(all.length / 2))

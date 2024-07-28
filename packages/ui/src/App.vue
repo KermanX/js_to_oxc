@@ -92,7 +92,8 @@ debouncedWatch(
 <template>
   <div py-2 md:py-4 fixed inset-0 flex flex-col>
     <div px-4 flex flex-wrap gap-x-2 pb-2>
-      <h1 text-xl md:text-3xl font-bold md:pb-2 select-none flex flex-wrap items-start gap-x-2>
+      <h1 text-xl md:text-3xl font-bold md:pb-2 select-none flex flex-wrap items-center gap-x-2>
+        <img src="/favicon.ico" h-1em>
         JS to Oxc
         <div text-sm self-end flex items-center gap-1 op-80>
           Convert JS to Oxc AST builder
@@ -100,22 +101,32 @@ debouncedWatch(
         </div>
       </h1>
       <div flex-grow />
-      <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1 font-mono>
+      <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1 font-mono items-end mr-2>
         <label flex align-center gap-1 select-none>
+          <span hidden lg:important:inline-block op-80>
+            ast builder:
+          </span>
           <input v-model="astBuilder" type="text" placeholder="ast_builder" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="astBuilder ||= 'self.ast_builder'">
         </label>
         <label flex align-center gap-1 select-none>
+          <span hidden lg:important:inline-block op-80>
+            empty span:
+          </span>
           <input v-model="span" type="text" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="span ||= 'SPAN'">
         </label>
       </div>
       <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1>
         <label flex align-center gap-1 select-none>
           <input v-model="autoRun" type="checkbox">
-          Auto Run
+          <span op-80>
+            Auto Run
+          </span>
         </label>
         <label flex align-center gap-1 select-none>
           <input v-model="shouldFormat" type="checkbox">
-          Format Rust
+          <span op-80>
+            Format Rust
+          </span>
         </label>
       </div>
     </div>
