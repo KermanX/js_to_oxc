@@ -49,4 +49,4 @@ I was porting a plugin from [Rollup](https://rollupjs.org) to [Rolldown](https:/
 
 Why not use a Rust macro which accepts JS and generates AST? Because the JS code is quite dynamic, and the macro will be too complex to write and maintain.
 
-> [Here] is a Rolldown plugin that uses lots of code to generate a dynamic AST, which is a good example of the use case of this tool.
+> [Here](https://github.com/rolldown/rolldown/blob/main/crates/rolldown_plugin_glob_import/src/lib.rs#L150-L306) is a Rolldown plugin that uses lots of code to generate a dynamic AST, which is a good example of the use case of this tool.
