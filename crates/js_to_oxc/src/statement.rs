@@ -118,7 +118,13 @@ impl JsToOxc {
           #ast_builder.statement_try(#span, #block, #handler, #finalizer)
         }
       }
-      Statement::WhileStatement(_) => unimplemented(),
+      Statement::WhileStatement(node) => {
+        let test = self.gen_expression(&node.test);
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_while(#span, #test, #body)
+        }
+      }
       Statement::WithStatement(_) => unimplemented(),
       _ => unimplemented(),
     }

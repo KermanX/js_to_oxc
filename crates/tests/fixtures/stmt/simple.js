@@ -34,4 +34,6 @@ try {
 } finally {
   f(3)
 }
-
+while (a < b) {
+  f(1)
+}
