@@ -4,9 +4,7 @@ use quote::quote;
 use wasm_bindgen::prelude::*;
 
 fn apply_aliases(code: String, ast_builder: &str, span: &str) -> String {
-  code
-    .replace("__ast_builder", ast_builder)
-    .replace("__span", span)
+  code.replace("__ast_builder", ast_builder).replace("__span", span)
 }
 
 #[wasm_bindgen]
