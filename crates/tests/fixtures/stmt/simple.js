@@ -4,6 +4,9 @@ do {
 for (let i = 0; i < 10; i++) {
   f(i)
 }
+for (i = 0;;) {
+  f(i)
+}
 for (const x of [1, 2, 3]) {
   f(x)
 }
