@@ -19,3 +19,10 @@ if (a < b) {
   f(2)
 }
 label: 1
+switch (a) {
+  case 1:
+    f(1)
+    break
+  default:
+    f(2)
+}

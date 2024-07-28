@@ -96,7 +96,13 @@ impl JsToOxc {
           #ast_builder.statement_return(#span, #argument)
         }
       }
-      Statement::SwitchStatement(_) => unimplemented(),
+      Statement::SwitchStatement(node) => {
+        let discriminant = self.gen_expression(&node.discriminant);
+        let cases = self.gen_vec(&node.cases, |case| self.gen_switch_case(case));
+        quote! {
+          #ast_builder.statement_switch(#span, #discriminant, #cases)
+        }
+      }
       Statement::ThrowStatement(_) => unimplemented(),
       Statement::TryStatement(_) => unimplemented(),
       Statement::WhileStatement(_) => unimplemented(),
