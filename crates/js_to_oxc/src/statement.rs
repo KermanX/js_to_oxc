@@ -103,7 +103,12 @@ impl JsToOxc {
           #ast_builder.statement_switch(#span, #discriminant, #cases)
         }
       }
-      Statement::ThrowStatement(_) => unimplemented(),
+      Statement::ThrowStatement(node) => {
+        let argument = self.gen_expression(&node.argument);
+        quote! {
+          #ast_builder.statement_throw(#span, #argument)
+        }
+      }
       Statement::TryStatement(_) => unimplemented(),
       Statement::WhileStatement(_) => unimplemented(),
       Statement::WithStatement(_) => unimplemented(),

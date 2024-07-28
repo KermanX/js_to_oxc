@@ -26,3 +26,4 @@ switch (a) {
   default:
     f(2)
 }
+throw x + y
