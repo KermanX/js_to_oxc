@@ -7,7 +7,7 @@ impl JsToOxc {
   pub(crate) fn gen_catch_clause(&self, node: &CatchClause) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
-   let param = self.gen_option(&node.param, |param| self.gen_catch_parameter(param));
+    let param = self.gen_option(&node.param, |param| self.gen_catch_parameter(param));
     let body = self.gen_block_statement(&node.body);
     quote! {
       #ast_builder.catch_clause(#span, #param, #body)

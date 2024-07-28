@@ -14,6 +14,7 @@ mod identifier;
 mod literal;
 mod member;
 mod misc;
+mod module;
 mod number;
 mod object;
 mod operator;

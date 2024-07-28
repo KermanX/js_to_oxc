@@ -1,5 +1,5 @@
 use crate::{utils::unimplemented, JsToOxc};
-use oxc::ast::ast::{Declaration, ModuleDeclaration, VariableDeclarationKind, VariableDeclarator};
+use oxc::ast::ast::{Declaration, VariableDeclarationKind, VariableDeclarator};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -81,9 +81,5 @@ impl JsToOxc {
     quote! {
       #ast_builder.variable_declarator(#span, #kind, #id, #init, #definite)
     }
-  }
-
-  pub(crate) fn gen_module_declaration(&self, _node: &ModuleDeclaration) -> TokenStream {
-    unimplemented()
   }
 }

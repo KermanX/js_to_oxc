@@ -1,5 +1,5 @@
-use crate::{utils::unimplemented, JsToOxc};
-use oxc::{ast::ast::Statement, syntax::node};
+use crate::JsToOxc;
+use oxc::ast::ast::Statement;
 use proc_macro2::TokenStream;
 use quote::quote;
 
