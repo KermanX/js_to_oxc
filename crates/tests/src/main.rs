@@ -25,6 +25,7 @@ fn main() {
 
   let lib_mod =
     units.iter().map(|(name, _)| format!("mod {};", name)).collect::<Vec<String>>().join("\n");
+  let lib_mod = format!("#![allow(unused_imports, dead_code)]\n{}", lib_mod);
   fs::write(src_root.join("lib.rs"), lib_mod).unwrap();
 
   Command::new("cargo")

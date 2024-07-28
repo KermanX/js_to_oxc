@@ -19,7 +19,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*.{rs,toml}": "cargo fmt",
-    "!(*.rs|*.toml)": "pnpm lint --fix"
+    "*": "pnpm lint --fix"
   }
 }
