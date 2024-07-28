@@ -1,16 +1,45 @@
 <script setup lang="ts">
 import { debouncedWatch, useLocalStorage } from '@vueuse/core'
+import { compressToBase64, decompressFromBase64 } from 'lz-string'
 import { generate_expression, generate_program } from 'js_to_oxc_wasm'
-import { ref, shallowRef } from 'vue'
+import { ref, shallowRef, watchEffect } from 'vue'
 import Editor from './Editor.vue'
 import { formatRust } from './format'
 
-const js = useLocalStorage('js_to_oxc:source', 'console.log("Hello, World!")\n')
 const autoRun = useLocalStorage('js_to_oxc:autoRun', true)
 const shouldFormat = useLocalStorage('js_to_oxc:shouldFormat', true)
-const programMode = useLocalStorage('js_to_oxc:programMode', true)
-const astBuilder = useLocalStorage('js_to_oxc:astBuilder', 'self.ast_builder')
-const span = useLocalStorage('js_to_oxc:span', 'SPAN')
+
+const js = ref('')
+const programMode = ref(true)
+const astBuilder = ref('')
+const span = ref('')
+
+function load() {
+  let parsed
+  if (window.location.hash) {
+    try {
+      parsed = JSON.parse(decompressFromBase64(window.location.hash.slice(1)) || '{}')
+    }
+    catch (e) { console.error(e) }
+  }
+  parsed ||= {}
+  js.value = parsed.js ?? 'console.log("Hello, World!")\n'
+  programMode.value = parsed.programMode ?? true
+  astBuilder.value = parsed.astBuilder ?? 'self.ast_builder'
+  span.value = parsed.span ?? 'SPAN'
+}
+
+function save() {
+  window.location.hash = compressToBase64(JSON.stringify({
+    js: js.value,
+    programMode: programMode.value,
+    astBuilder: astBuilder.value,
+    span: span.value,
+  }))
+}
+
+load()
+watchEffect(save)
 
 const formatted = ref('')
 const formatting = ref(false)
