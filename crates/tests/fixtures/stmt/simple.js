@@ -40,3 +40,8 @@ while (a < b) {
 with (x) {
   a = 1
 }
+function f() {
+}
+const a = 1
+let b = x
+var c

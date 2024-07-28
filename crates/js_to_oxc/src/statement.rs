@@ -1,5 +1,5 @@
 use crate::{utils::unimplemented, JsToOxc};
-use oxc::ast::ast::Statement;
+use oxc::{ast::ast::Statement, syntax::node};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -132,7 +132,21 @@ impl JsToOxc {
           #ast_builder.statement_with(#span, #object, #body)
         }
       }
-      _ => unimplemented(),
+      _ => {
+        if node.is_declaration() {
+          let node = node.to_declaration();
+          let inner = self.gen_declaration(node);
+          quote! {
+            #ast_builder.statement_declaration(#inner)
+          }
+        } else {
+          let node = node.to_module_declaration();
+          let inner = self.gen_module_declaration(node);
+          quote! {
+              #ast_builder.statement_module_declaration(#inner)
+          }
+        }
+      }
     }
   }
 }
