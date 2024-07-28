@@ -1,22 +1,32 @@
+import { ref } from 'vue'
+import iframeSrc from './formatter.html?url'
+
 const start = `impl _ {\n    fn create_ast(&self) {`
 const end = `    }\n}`
 
-export async function formatRust(source: string, signal: AbortSignal) {
-  const response = await fetch('https://play.rust-lang.org/format', {
-    headers: {
-      'accept': '*/*',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ channel: 'stable', edition: '2021', code: start + source + end }),
-    method: 'POST',
-    mode: 'cors',
-    credentials: 'omit',
-    signal,
+const formatter: HTMLIFrameElement = document.createElement('iframe')
+formatter.src = iframeSrc
+formatter.style.display = 'none'
+document.body.appendChild(formatter)
+
+export const formatterReady = ref(false)
+
+formatter.onload = () => {
+  if (!formatter.contentWindow)
+    throw new Error('Failed to load formatter')
+  // @ts-expect-error missing types
+  formatter.contentWindow.wasmLoader.then(() => {
+    formatterReady.value = true
+  }).catch(() => {
+    throw new Error('Failed to load formatter')
   })
-  const data = await response.json()
-  if (!data.success) {
-    throw data.exitDetail ? new Error(`Formatter error: ${data.exitDetail}\n${data.stderr}`) : new Error(`Formatter error: ${response.status} ${response.statusText}`)
-  }
-  const code: string = data.code.slice(start.length, -end.length)
+}
+
+export function formatRust(source: string) {
+  // @ts-expect-error missing types
+  const result = formatter.contentWindow.formatRustCode(start + source + end)
+  if (result.error)
+    throw new Error(result.error)
+  const code: string = result.success.slice(start.length, -end.length)
   return `${code.replaceAll(/^ {8}( *)/gm, (_, all) => all.slice(all.length / 2)).trim()}\n`
 }

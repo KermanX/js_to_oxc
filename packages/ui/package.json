@@ -9,7 +9,6 @@
     "@shikijs/monaco": "^1.11.2",
     "@unocss/reset": "^0.61.5",
     "@vitejs/plugin-vue": "^5.1.0",
-    "@vueuse/core": "^10.11.0",
     "js_to_oxc_wasm": "file:../../crates/wasm_binding/pkg",
     "lz-string": "^1.5.0",
     "monaco-editor-core": "^0.50.0",

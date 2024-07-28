@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { debouncedWatch, useLocalStorage } from '@vueuse/core'
 import { compressToBase64, decompressFromBase64 } from 'lz-string'
 import { generate_expression, generate_program } from 'js_to_oxc_wasm'
-import { ref, shallowRef, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import Editor from './Editor.vue'
-import { formatRust } from './format'
+import { formatRust, formatterReady } from './format'
 
-const autoRun = useLocalStorage('js_to_oxc:autoRun', true)
-const shouldFormat = useLocalStorage('js_to_oxc:shouldFormat', true)
-
-const js = ref('')
+const input = ref('')
 const programMode = ref(true)
 const astBuilder = ref('')
 const span = ref('')
+
+const debouncedInput = ref('')
+let debounceTimeout = Number.NaN
+watch(input, (input) => {
+  clearInterval(debounceTimeout)
+  debounceTimeout = setTimeout(() => {
+    debouncedInput.value = input
+  }, 300)
+})
 
 function load() {
   let parsed
@@ -23,7 +28,7 @@ function load() {
     catch (e) { console.error(e) }
   }
   parsed ||= {}
-  js.value = parsed.js ?? 'console.log("Hello, World!")\n'
+  debouncedInput.value = input.value = parsed.js ?? 'console.log("Hello, World!")\n'
   programMode.value = parsed.programMode ?? true
   astBuilder.value = parsed.astBuilder ?? 'self.ast_builder'
   span.value = parsed.span ?? 'SPAN'
@@ -31,7 +36,7 @@ function load() {
 
 function save() {
   window.location.hash = compressToBase64(JSON.stringify({
-    js: js.value,
+    input: input.value,
     programMode: programMode.value,
     astBuilder: astBuilder.value,
     span: span.value,
@@ -42,49 +47,24 @@ load()
 watchEffect(save)
 
 const formatted = ref('')
-const formatting = ref(false)
 const error = ref('')
-const controller = shallowRef<AbortController>()
+const loading = ref(true)
 
-async function run() {
-  const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(js.value, astBuilder.value, span.value)
-  controller.value?.abort()
-  const { signal } = controller.value = new AbortController()
+watchEffect(() => {
+  const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(debouncedInput.value, astBuilder.value, span.value)
   error.value = errors || ''
   formatted.value = unformatted
-  formatting.value = false
-  try {
-    if (shouldFormat.value) {
-      formatting.value = true
-      formatRust(unformatted, signal).then((result) => {
-        if (!signal.aborted) {
-          formatted.value = result
-          formatting.value = false
-        }
-      }).catch((err) => {
-        if (!signal.aborted) {
-          error.value = String(err)
-          formatted.value = unformatted
-          formatting.value = false
-        }
-      })
+  if (formatterReady.value) {
+    loading.value = false
+    try {
+      formatted.value = formatRust(unformatted)
+    }
+    catch (err) {
+      console.error(err)
+      error.value += String(err)
     }
   }
-  catch (err: any) {
-    if (err instanceof DOMException && err.name === 'AbortError')
-      return
-    error.value = String(err)
-    formatted.value = unformatted
-    formatting.value = false
-  }
-}
-
-debouncedWatch(
-  () => autoRun.value && [js.value, shouldFormat.value, programMode.value, astBuilder.value, span.value],
-  shouldRun => shouldRun && run(),
-  { debounce: 300 },
-)
-run()
+})
 </script>
 
 <template>
@@ -101,30 +81,16 @@ run()
       <div flex-grow />
       <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1 font-mono items-end mr-2>
         <label flex align-center gap-1 select-none>
-          <span hidden lg:important:inline-block op-80>
+          <span hidden sm:important:inline-block op-80>
             ast builder:
           </span>
           <input v-model="astBuilder" type="text" placeholder="ast_builder" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="astBuilder ||= 'self.ast_builder'">
         </label>
         <label flex align-center gap-1 select-none>
-          <span hidden lg:important:inline-block op-80>
+          <span hidden sm:important:inline-block op-80>
             empty span:
           </span>
           <input v-model="span" type="text" bg-dark-300 px-1 rounded w-40 focus:outline-none @blur="span ||= 'SPAN'">
-        </label>
-      </div>
-      <div flex w-fit md:flex-col h-min md:h-0 z-10 gap-x-2 gap-y-1>
-        <label flex align-center gap-1 select-none>
-          <input v-model="autoRun" type="checkbox">
-          <span op-80>
-            Auto Run
-          </span>
-        </label>
-        <label flex align-center gap-1 select-none>
-          <input v-model="shouldFormat" type="checkbox">
-          <span op-80>
-            Format Rust
-          </span>
         </label>
       </div>
     </div>
@@ -137,14 +103,8 @@ run()
               {{ programMode ? 'Program' : 'Expression' }}
             </button>
           </h2>
-          <div flex-grow />
-          <div>
-            <button v-if="!autoRun" bg-gray-400 bg-op-40 py-.5 px-2.5 mr-2 md:mr-0 rounded hover:bg-op-50 select-none @click="run">
-              Run
-            </button>
-          </div>
         </div>
-        <Editor v-model="js" lang="javascript" class="flex-grow h-0 max-h-full" />
+        <Editor v-model="input" lang="javascript" class="flex-grow h-0 max-h-full" />
       </div>
       <div flex-grow h-0 md:h-full md:w-0 flex flex-col>
         <h2 md:text-xl pb-2 pl-4 select-none>
@@ -160,16 +120,16 @@ run()
               <div font-mono>
                 {{ error }}
               </div>
-              <button v-if="error || formatting" absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="error = ''" />
+              <button absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="error = ''" />
             </div>
-            <div v-if="formatting" relative text-gray-300 bg-gray-900 bg-op-80 b-gray-500>
+            <div v-if="loading" relative text-gray-300 bg-gray-900 bg-op-80 b-gray-500>
               <h3 text-lg pb-1>
                 Running
               </h3>
               <div font-mono>
-                Formatting Rust code...
+                Loading formatter
               </div>
-              <button v-if="error || formatting" absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="formatting = false" />
+              <button absolute right-3 top-3 w-6 h-6 b-none i-carbon-close @click="loading = false" />
             </div>
           </div>
         </div>

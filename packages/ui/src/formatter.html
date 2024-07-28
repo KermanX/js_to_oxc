@@ -1,0 +1,23 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  <script src='https://alexcrichton.github.io/rustfmt-wasm/wasm_rustfmt.js'></script>
+  <script>
+    window.formatRustCode = (source) => {
+      const result = wasm_bindgen.rustfmt(source);
+      const error = result.error();
+      if (error) {
+        return { error };
+      } else {
+        return { success: result.code() };
+      }
+      result.free();
+    };
+    window.wasmLoader = wasm_bindgen('https://alexcrichton.github.io/rustfmt-wasm/wasm_rustfmt_bg.wasm')
+  </script>
+</body>
+
+</html>
