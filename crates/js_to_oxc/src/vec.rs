@@ -8,8 +8,19 @@ impl JsToOxc {
   where
     M: Fn(&T) -> TokenStream,
   {
-    let mut tokens = TokenStream::new();
     let ast_builder = &self.ast_builder;
+    if items.len() == 0 {
+      return quote! {
+          #ast_builder.vec()
+      };
+    }
+    if items.len() == 1 {
+      let item = map(&items[0]);
+      return quote! {
+          #ast_builder.vec1(#item)
+      };
+    }
+    let mut tokens = TokenStream::new();
     for arg in items {
       let arg = map(arg);
       tokens.append_all(quote! {
