@@ -37,3 +37,6 @@ try {
 while (a < b) {
   f(1)
 }
+with (x) {
+  a = 1
+}

@@ -1,5 +1,5 @@
 use crate::{utils::unimplemented, JsToOxc};
-use oxc::ast::ast::{BlockStatement, Statement};
+use oxc::ast::ast::Statement;
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -125,7 +125,13 @@ impl JsToOxc {
           #ast_builder.statement_while(#span, #test, #body)
         }
       }
-      Statement::WithStatement(_) => unimplemented(),
+      Statement::WithStatement(node) => {
+        let object = self.gen_expression(&node.object);
+        let body = self.gen_statement(&node.body);
+        quote! {
+          #ast_builder.statement_with(#span, #object, #body)
+        }
+      }
       _ => unimplemented(),
     }
   }
