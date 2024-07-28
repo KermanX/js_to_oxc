@@ -2,6 +2,7 @@ use glob::glob;
 use js_to_oxc_tests::generate_expr_tests;
 use std::fs;
 use std::path::PathBuf;
+use std::process::{Command, Stdio};
 
 fn main() {
   let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -23,6 +24,13 @@ fn main() {
   let lib_mod =
     units.iter().map(|unit| format!("mod {};", unit)).collect::<Vec<String>>().join("\n");
   fs::write(src_root.join("lib.rs"), lib_mod).unwrap();
+
+  Command::new("cargo")
+    .arg("fmt")
+    .current_dir(generated_root)
+    .stderr(Stdio::piped())
+    .spawn()
+    .unwrap();
 
   println!("Tests generated");
 }
