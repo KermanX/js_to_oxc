@@ -9,6 +9,7 @@ const input = ref('')
 const programMode = ref(true)
 const astBuilder = ref('')
 const span = ref('')
+const shouldFormat = ref(true)
 
 const debouncedInput = ref('')
 let debounceTimeout = Number.NaN
@@ -32,6 +33,7 @@ function load() {
   programMode.value = parsed.programMode ?? true
   astBuilder.value = parsed.astBuilder ?? 'self.ast_builder'
   span.value = parsed.span ?? 'SPAN'
+  shouldFormat.value = parsed.shouldFormat ?? true
 }
 
 function save() {
@@ -49,11 +51,23 @@ watchEffect(save)
 const formatted = ref('')
 const error = ref('')
 const loading = ref(true)
+const cannotFormat = ref(false)
 
 watchEffect(() => {
   const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(debouncedInput.value, astBuilder.value, span.value)
   error.value = errors || ''
   formatted.value = unformatted
+  if (unformatted.length > 3000) {
+    shouldFormat.value = false
+    cannotFormat.value = true
+  }
+  else {
+    cannotFormat.value = false
+  }
+  if (!shouldFormat.value) {
+    loading.value = false
+    return
+  }
   if (formatterReady.value) {
     loading.value = false
     try {
@@ -107,8 +121,15 @@ watchEffect(() => {
         <Editor v-model="input" lang="javascript" class="flex-grow h-0 max-h-full" />
       </div>
       <div flex-grow h-0 md:h-full md:w-0 flex flex-col>
-        <h2 md:text-xl pb-2 pl-4 select-none>
+        <h2 md:text-xl pb-2 pl-4 select-none flex items-end>
           Output RS
+          <div flex-grow />
+          <div mr-6>
+            <label text-sm flex items-center op-80 :title="cannotFormat ? 'Too long to be formatted' : undefined">
+              <input v-model="shouldFormat" type="checkbox" class="mr-1" :disabled="cannotFormat">
+              Format
+            </label>
+          </div>
         </h2>
         <div flex-grow relative max-h-full>
           <Editor v-model="formatted" lang="rust" readonly class="w-full h-full max-h-full" />
