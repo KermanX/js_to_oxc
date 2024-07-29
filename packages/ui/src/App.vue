@@ -28,7 +28,7 @@ function load() {
     catch (e) { console.error(e) }
   }
   parsed ||= {}
-  debouncedInput.value = input.value = parsed.js ?? 'console.log("Hello, World!")\n'
+  debouncedInput.value = input.value = parsed.input ?? 'console.log("Hello, World!")\n'
   programMode.value = parsed.programMode ?? true
   astBuilder.value = parsed.astBuilder ?? 'self.ast_builder'
   span.value = parsed.span ?? 'SPAN'
