@@ -24,14 +24,14 @@ impl JsToOxc {
     for arg in items {
       let arg = map(arg);
       tokens.append_all(quote! {
-          __items.push(#arg);
+          items.push(#arg);
       });
     }
     quote! {
         {
-            let mut __items = #ast_builder.vec();
+            let mut items = #ast_builder.vec();
             #tokens
-            __items
+            items
         }
     }
   }
