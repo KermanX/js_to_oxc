@@ -8,6 +8,8 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote, TokenStreamExt};
 use std::env;
 
+mod hole;
+
 pub fn generate_tests<M>(name: &str, files: Paths, generator: M) -> String
 where
   M: Fn(&str, &str) -> TokenStream,

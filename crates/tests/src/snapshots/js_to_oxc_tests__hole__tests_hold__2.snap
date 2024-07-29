@@ -1,0 +1,5 @@
+---
+source: crates/tests/src/hole.rs
+expression: code
+---
+ast_builder . expression_call (SPAN , ast_builder . vec1 (ast_builder . argument_expression (ast_builder . expression_binary (SPAN , __4__ , BinaryOperator :: Addition , __5__)) ,) , ast_builder . expression_member (ast_builder . member_expression_computed (SPAN , ast_builder . expression_member (ast_builder . member_expression_static (SPAN , __1__ , __2__ , false ,)) , __3__ , false ,)) , Option :: < TSTypeParameterInstantiation > :: None , false)

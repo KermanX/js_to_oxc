@@ -1,0 +1,5 @@
+---
+source: crates/tests/src/hole.rs
+expression: code
+---
+ast_builder . expression_object (SPAN , ast_builder . vec1 (ast_builder . object_property_kind_object_property (SPAN , PropertyKind :: Init , ast_builder . property_key_identifier_name (SPAN , "$1") , __2__ , None , false , false , false ,)) , None)

@@ -33,6 +33,10 @@ jobs:
         env:
           COMPLEX_TESTS: true
 
-      - name: Run tests
+      - name: Run generated tests
         run: cargo test
         working-directory: ./crates/tests/generated
+
+      - name: Run snapshot tests
+        run: cargo test
+        working-directory: ./crates/tests
