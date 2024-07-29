@@ -3,13 +3,16 @@ use oxc::ast::ast::{
   BindingIdentifier, IdentifierName, IdentifierReference, LabelIdentifier, PrivateIdentifier,
 };
 use proc_macro2::TokenStream;
-use quote::quote;
+use quote::{format_ident, quote};
 
 impl JsToOxc {
   pub(crate) fn gen_identifier_name(&self, node: &IdentifierName) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let name = node.name.as_str();
+    if let Some(hole) = self.gen_hole(name) {
+      return hole;
+    }
     quote! {
       #ast_builder.identifier_name(#span, #name)
     }
@@ -19,6 +22,9 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let name = identifier.name.as_str();
+    if let Some(hole) = self.gen_hole(name) {
+      return hole;
+    }
     quote! {
       #ast_builder.binding_identifier(#span, #name)
     }
@@ -28,6 +34,9 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let name = identifier.name.as_str();
+    if let Some(hole) = self.gen_hole(name) {
+      return hole;
+    }
     quote! {
       #ast_builder.label_identifier(#span, #name)
     }
@@ -37,6 +46,9 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let name = identifier.name.as_str();
+    if let Some(hole) = self.gen_hole(name) {
+      return hole;
+    }
     quote! {
       #ast_builder.private_identifier(
         #span,
@@ -49,11 +61,23 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let name = identifier.name.as_str();
+    if let Some(hole) = self.gen_hole(name) {
+      return hole;
+    }
     quote! {
       #ast_builder.identifier_reference(
         #span,
         #name,
       )
+    }
+  }
+
+  pub(crate) fn gen_hole(&self, name: &str) -> Option<TokenStream> {
+    if name.starts_with('$') {
+      let name = format_ident!("_{}__", name.replace('$', "_"));
+      Some(quote! { #name })
+    } else {
+      None
     }
   }
 }

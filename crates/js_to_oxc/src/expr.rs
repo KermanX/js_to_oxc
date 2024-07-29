@@ -56,6 +56,9 @@ impl JsToOxc {
 
       Expression::Identifier(node) => {
         let name: &str = node.name.as_str();
+        if let Some(hole) = self.gen_hole(name) {
+          return hole;
+        }
         quote! {
             #ast_builder.expression_identifier_reference(#span, #name)
         }

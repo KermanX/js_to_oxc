@@ -39,6 +39,31 @@ The execution result of the generated Rust code is the AST of the given JS code.
 
 This tool supports both expression mode and program mode.
 
+### Holes
+
+This tool supports holes in the JS code. Identifier starting with `$` will be treated as a hole. For example:
+
+```js
+log($1)
+```
+
+Will be converted to:
+
+```rust
+self.ast_builder.expression_call(
+  SPAN,
+  self.ast_builder.vec1(
+    self.ast_builder.argument_expression(
+      __1__  // hole
+    ),
+  ),
+  self.ast_builder
+    .expression_identifier_reference(SPAN, "log"),
+  Option::<TSTypeParameterInstantiation>::None,
+  false,
+)
+```
+
 ### Motivation
 
 I was porting a plugin from [Rollup](https://rollupjs.org) to [Rolldown](https://rolldown.rs). The plugin injects some **dynamic** JS code in the transform hook. In Rollup, the plugin simply uses string concatenation to inject the JS code. However, in Rolldown, the plugin needs to build the AST of the JS code - which is about 20 times longer than the implementation in Rollup. So, I decided to write this tool to convert the JS code to Oxc AST builder code.

@@ -40,7 +40,7 @@ importers:
         version: 5.1.0(vite@5.3.5)(vue@3.4.34(typescript@5.5.4))
       js_to_oxc_wasm:
         specifier: file:../../crates/wasm_binding/pkg
-        version: file:crates/wasm_binding/pkg
+        version: pkg@file:crates/wasm_binding/pkg
       lz-string:
         specifier: ^1.5.0
         version: 1.5.0
@@ -1610,9 +1610,6 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
-  js_to_oxc_wasm@file:crates/wasm_binding/pkg:
-    resolution: {directory: crates/wasm_binding/pkg, type: directory}
-
   jsdoc-type-pratt-parser@4.0.0:
     resolution: {integrity: sha512-YtOli5Cmzy3q4dP26GraSOeAhqecewG04hoO8DY56CH4KJ9Fvv5qKWUCCo3HZob7esJQHCv6/+bnTy72xZZaVQ==}
     engines: {node: '>=12.0.0'}
@@ -1908,6 +1905,9 @@ packages:
 
   pkg-types@1.1.3:
     resolution: {integrity: sha512-+JrgthZG6m3ckicaOB74TwQ+tBWsFl3qVQg7mN8ulwSOElJ7gBhKzj2VkCPnZ4NlF6kEquYU+RIYNVAvzd54UA==}
+
+  pkg@file:crates/wasm_binding/pkg:
+    resolution: {directory: crates/wasm_binding/pkg, type: directory}
 
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
@@ -4059,8 +4059,6 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  js_to_oxc_wasm@file:crates/wasm_binding/pkg: {}
-
   jsdoc-type-pratt-parser@4.0.0: {}
 
   jsesc@0.5.0: {}
@@ -4351,6 +4349,8 @@ snapshots:
       confbox: 0.1.7
       mlly: 1.7.1
       pathe: 1.1.2
+
+  pkg@file:crates/wasm_binding/pkg: {}
 
   pluralize@8.0.0: {}
 

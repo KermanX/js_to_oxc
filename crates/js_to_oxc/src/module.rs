@@ -195,6 +195,9 @@ impl JsToOxc {
     match node {
       ImportAttributeKey::Identifier(node) => {
         let name = node.name.as_str();
+        if let Some(hole) = self.gen_hole(name) {
+          return hole;
+        }
         quote! {
           #ast_builder.import_attribute_key_identifier_name(
             #span,
