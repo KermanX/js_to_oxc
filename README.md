@@ -15,22 +15,18 @@ Will be converted to:
 ```rust
 self.ast_builder.expression_call(
   SPAN,
-  {
-    let mut __arguments = self.ast_builder.vec();
-    __arguments.push(
-      self.ast_builder.argument_expression(
-        self.ast_builder
-            .expression_string_literal(SPAN, "Hello, World!"),
-      ),
-    );
-    __arguments
-  },
+  self.ast_builder.vec1(
+    self.ast_builder.argument_expression(
+      self.ast_builder
+        .expression_string_literal(SPAN, "Hello, World!"),
+    ),
+  ),
   self.ast_builder.expression_member(
     self.ast_builder.member_expression_static(
       SPAN,
       self.ast_builder
-          .expression_identifier_reference(SPAN, "console"),
-      "log",
+        .expression_identifier_reference(SPAN, "console"),
+      self.ast_builder.identifier_name(SPAN, "log"),
       false,
     ),
   ),
