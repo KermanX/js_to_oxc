@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { compressToBase64, decompressFromBase64 } from 'lz-string'
 import { generate_expression, generate_program } from 'js_to_oxc_wasm'
-import { ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import Editor from './Editor.vue'
 import { formatRust, formatterReady } from './format'
 
@@ -29,7 +29,7 @@ function load() {
     catch (e) { console.error(e) }
   }
   parsed ||= {}
-  debouncedInput.value = input.value = parsed.input ?? 'console.log("Hello, World!")\n'
+  debouncedInput.value = input.value = parsed.input ?? `console.log('Hello', $name)\n`
   programMode.value = parsed.programMode ?? true
   astBuilder.value = parsed.astBuilder ?? 'self.ast_builder'
   span.value = parsed.span ?? 'SPAN'
@@ -52,19 +52,22 @@ const formatted = ref('')
 const error = ref('')
 const loading = ref(true)
 const cannotFormat = ref(false)
+const formatModelValue = computed({
+  get: () => !cannotFormat.value && shouldFormat.value,
+  set: value => shouldFormat.value = value,
+})
 
 watchEffect(() => {
   const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(debouncedInput.value, astBuilder.value, span.value)
   error.value = errors || ''
   formatted.value = unformatted
   if (unformatted.length > 3000) {
-    shouldFormat.value = false
     cannotFormat.value = true
   }
   else {
     cannotFormat.value = false
   }
-  if (!shouldFormat.value) {
+  if (cannotFormat.value || !shouldFormat.value) {
     loading.value = false
     return
   }
@@ -126,7 +129,7 @@ watchEffect(() => {
           <div flex-grow />
           <div mr-6>
             <label text-sm flex items-center op-80 :title="cannotFormat ? 'Too long to be formatted' : undefined">
-              <input v-model="shouldFormat" type="checkbox" class="mr-1" :disabled="cannotFormat">
+              <input v-model="formatModelValue" type="checkbox" class="mr-1" :disabled="cannotFormat">
               Format
             </label>
           </div>
