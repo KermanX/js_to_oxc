@@ -1,5 +1,5 @@
 use crate::JsToOxc;
-use oxc::ast::ast::*;
+use oxc::{ast::ast::*, syntax::operator::UnaryOperator};
 use proc_macro2::TokenStream;
 use quote::quote;
 
@@ -237,6 +237,16 @@ impl JsToOxc {
       Expression::UnaryExpression(node) => {
         let ast_builder = &self.ast_builder;
         let span = &self.span;
+        // Handles `void 0`
+        if matches!(&node.operator, UnaryOperator::Void) {
+          if let Expression::NumericLiteral(node) = &node.argument {
+            if node.value == 0.0 {
+              return quote! {
+                #ast_builder.void_0()
+              };
+            }
+          }
+        }
         let operator = self.gen_unary_operator(&node.operator);
         let argument = self.gen_expression(&node.argument);
         quote! {
