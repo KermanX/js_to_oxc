@@ -21,7 +21,7 @@ impl JsToOxc {
         }
       }
       None => quote! {
-        Option::<#r#type>::None
+        None::<#r#type>
       },
     }
   }
