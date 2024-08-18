@@ -27,7 +27,9 @@ impl JsToOxc {
       BindingPatternKind::ObjectPattern(pattern) => {
         let properties =
           self.gen_vec(&pattern.properties, |property| self.gen_binding_property(property));
-        let rest = self.gen_option(&pattern.rest, |rest| self.gen_binding_rest_element(rest));
+        let rest = self.gen_option_with_type(&pattern.rest, "BindingRestElement", |rest| {
+          self.gen_binding_rest_element(rest)
+        });
         quote! {
           #ast_builder.binding_pattern_kind_object_pattern(#span, #properties, #rest)
         }
