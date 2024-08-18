@@ -17,10 +17,10 @@ impl JsToOxc {
     let generator = function.generator;
     let r#async = function.r#async;
     let declare = function.declare;
-    let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
-    let this_param = quote! { Option::<TSThisParameter>::None };
+    let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
+    let this_param = quote! { None::<TSThisParameter> };
     let params = self.gen_formal_parameters(&function.params);
-    let return_type = quote! { Option::<TSTypeAnnotation>::None };
+    let return_type = quote! { None::<TSTypeAnnotation> };
     let body = self.gen_option(&function.body, |body| self.gen_function_body(body));
     quote! {
       #ast_builder.function(#r#type, #span, #id, #generator, #r#async, #declare, #type_parameters, #this_param, #params, #return_type, #body)
@@ -69,7 +69,7 @@ impl JsToOxc {
     let span = &self.span;
     let decorators = quote! { #ast_builder.vec() };
     let pattern = self.gen_binding_pattern(&param.pattern);
-    let accessibility = quote! { Option::<TSAccessibility>::None };
+    let accessibility = quote! { None::<TSAccessibility> };
     let readonly = param.readonly;
     let r#override = param.r#override;
     quote! {

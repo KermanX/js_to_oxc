@@ -7,7 +7,7 @@ impl JsToOxc {
   pub(crate) fn gen_binding_pattern(&self, element: &BindingPattern) -> TokenStream {
     let ast_builder = &self.ast_builder;
     let kind = self.gen_binding_pattern_kind(&element.kind);
-    let type_annotation = quote! { Option::<TSTypeAnnotation>::None };
+    let type_annotation = quote! { None::<TSTypeAnnotation> };
     let optional = element.optional;
     quote! {
       #ast_builder.binding_pattern(#kind, #type_annotation, #optional)

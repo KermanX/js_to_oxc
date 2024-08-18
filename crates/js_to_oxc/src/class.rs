@@ -47,7 +47,7 @@ impl JsToOxc {
         let r#static = node.r#static;
         let r#override = node.r#override;
         let optional = node.optional;
-        let accessibility = quote! { Option::<TSAccessibility>::None };
+        let accessibility = quote! { None::<TSAccessibility> };
         quote! {
           #ast_builder.class_element_method_definition(
             #r#type,
@@ -77,8 +77,8 @@ impl JsToOxc {
         let optional = node.optional;
         let definite = node.definite;
         let readonly = node.readonly;
-        let type_annotation = quote! { Option::<TSTypeAnnotation>::None };
-        let accessibility = quote! { Option::<TSAccessibility>::None };
+        let type_annotation = quote! { None::<TSTypeAnnotation> };
+        let accessibility = quote! { None::<TSAccessibility> };
         quote! {
           #ast_builder.class_element_property_definition(
             #r#type,

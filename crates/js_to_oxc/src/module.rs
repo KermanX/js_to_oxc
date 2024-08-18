@@ -230,10 +230,10 @@ impl JsToOxc {
         let generator = node.generator;
         let r#async = node.r#async;
         let declare = node.declare;
-        let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
-        let this_param = quote! { Option::<TSThisParameter>::None };
+        let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
+        let this_param = quote! { None::<TSThisParameter> };
         let params = self.gen_formal_parameters(&node.params);
-        let return_type = quote! { Option::<TSTypeAnnotation>::None };
+        let return_type = quote! { None::<TSTypeAnnotation> };
         let body = self.gen_option(&node.body, |body| self.gen_function_body(body));
         quote! {
           #ast_builder.export_default_declaration_kind_function(
@@ -255,10 +255,10 @@ impl JsToOxc {
         let r#type = self.gen_class_type(&node.r#type);
         let decorators = quote! { #ast_builder.vec() };
         let id = self.gen_option(&node.id, |id| self.gen_binding_identifier(id));
-        let type_parameters = quote! { Option::<TSTypeParameterDeclaration>::None };
+        let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
         let super_class =
           self.gen_option(&node.super_class, |super_class| self.gen_expression(super_class));
-        let super_type_parameters = quote! { Option::<TSTypeParameterInstantiation>::None };
+        let super_type_parameters = quote! { None::<TSTypeParameterInstantiation> };
         let implements = quote! { None };
         let body = self.gen_class_body(&node.body);
         let r#abstract = node.r#abstract;
