@@ -127,7 +127,7 @@ impl JsToOxc {
         let callee = self.gen_expression(&node.callee);
         let optional = node.optional;
         quote! {
-          #ast_builder.expression_call(#span, #arguments, #callee,None::<TSTypeParameterInstantiation>, #optional)
+          #ast_builder.expression_call(#span, #callee, None::<TSTypeParameterInstantiation>, #arguments, #optional)
         }
       }
       Expression::ChainExpression(node) => {
