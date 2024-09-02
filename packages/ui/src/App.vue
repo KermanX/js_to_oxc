@@ -61,7 +61,7 @@ watchEffect(() => {
   const { result: unformatted, errors } = (programMode.value ? generate_program : generate_expression)(debouncedInput.value, astBuilder.value, span.value)
   error.value = errors || ''
   formatted.value = unformatted
-  if (unformatted.length > 3000) {
+  if (unformatted.length > 1500) {
     cannotFormat.value = true
   }
   else {
