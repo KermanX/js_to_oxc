@@ -111,9 +111,12 @@ impl JsToOxc {
       }
       Statement::TryStatement(node) => {
         let block = self.gen_block_statement(&node.block);
-        let handler = self.gen_option(&node.handler, |handler| self.gen_catch_clause(handler));
-        let finalizer =
-          self.gen_option(&node.finalizer, |finalizer| self.gen_block_statement(finalizer));
+        let handler = self.gen_option_with_type(&node.handler, "CatchClause", |handler| {
+          self.gen_catch_clause(handler)
+        });
+        let finalizer = self.gen_option_with_type(&node.finalizer, "BlockStatement", |finalizer| {
+          self.gen_block_statement(finalizer)
+        });
         quote! {
           #ast_builder.statement_try(#span, #block, #handler, #finalizer)
         }

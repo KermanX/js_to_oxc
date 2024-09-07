@@ -37,6 +37,10 @@ try {
 } finally {
   f(3)
 }
+try {}
+finally {}
+try {}
+catch {}
 while (a < b) {
   f(1)
 }
