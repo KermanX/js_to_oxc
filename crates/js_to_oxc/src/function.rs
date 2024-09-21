@@ -11,9 +11,7 @@ impl JsToOxc {
     let ast_builder = &self.ast_builder;
     let span = &self.span;
     let r#type = self.gen_function_type(&function.r#type);
-    let id = self.gen_option_with_type(&function.id, "BindingIdentifier", |id| {
-      self.gen_binding_identifier(id)
-    });
+    let id = self.gen_option(&function.id, |id| self.gen_binding_identifier(id));
     let generator = function.generator;
     let r#async = function.r#async;
     let declare = function.declare;

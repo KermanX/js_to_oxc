@@ -53,9 +53,7 @@ impl JsToOxc {
         let elements = self.gen_vec(&node.elements, |element| {
           self.gen_option(element, |element| self.gen_assignment_target_maybe_default(element))
         });
-        let rest = self.gen_option_with_type(&node.rest, "AssignmentTargetRest", |rest| {
-          self.gen_assignment_target_rest(rest)
-        });
+        let rest = self.gen_option(&node.rest, |rest| self.gen_assignment_target_rest(rest));
         let trailing_comma = self.gen_option(&node.trailing_comma, |_| quote! { #span });
         quote! {
           #ast_builder.assignment_target_pattern_array_assignment_target(#span, #elements, #rest, #trailing_comma)
@@ -64,9 +62,7 @@ impl JsToOxc {
       AssignmentTargetPattern::ObjectAssignmentTarget(node) => {
         let properties =
           self.gen_vec(&node.properties, |property| self.gen_assignment_target_property(property));
-        let rest = self.gen_option_with_type(&node.rest, "AssignmentTargetRest", |rest| {
-          self.gen_assignment_target_rest(rest)
-        });
+        let rest = self.gen_option(&node.rest, |rest| self.gen_assignment_target_rest(rest));
         quote! {
           #ast_builder.assignment_target_pattern_object_assignment_target(#span, #properties, #rest)
         }

@@ -68,8 +68,7 @@ impl JsToOxc {
         let r#type = self.gen_property_definition_type(&node.r#type);
         let decorators = quote! { #ast_builder.vec() };
         let key = self.gen_property_key(&node.key);
-        let value =
-          self.gen_option_with_type(&node.value, "Expression", |value| self.gen_expression(value));
+        let value = self.gen_option(&node.value, |value| self.gen_expression(value));
         let computed = node.computed;
         let r#static = node.r#static;
         let declare = node.declare;
