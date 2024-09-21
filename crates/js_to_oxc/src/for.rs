@@ -17,14 +17,6 @@ impl JsToOxc {
           #ast_builder.for_statement_left_variable_declaration(#span, #kind, #declarations, #declare)
         }
       }
-      ForStatementLeft::UsingDeclaration(node) => {
-        let is_await = node.is_await;
-        let declarations =
-          self.gen_vec(&node.declarations, |decl| self.gen_variable_declarator(decl));
-        quote! {
-          #ast_builder.for_statement_left_expression(#span, #is_await, #declarations)
-        }
-      }
       _ => {
         let node = node.to_assignment_target();
         let inner = self.gen_assignment_target(node);
@@ -46,14 +38,6 @@ impl JsToOxc {
         let declare = node.declare;
         quote! {
           #ast_builder.for_statement_init_variable_declaration(#span, #kind, #declarations, #declare)
-        }
-      }
-      ForStatementInit::UsingDeclaration(node) => {
-        let is_await = node.is_await;
-        let declarations =
-          self.gen_vec(&node.declarations, |decl| self.gen_variable_declarator(decl));
-        quote! {
-          #ast_builder.for_statement_init_using_declaration(#span, #is_await, #declarations)
         }
       }
       _ => {

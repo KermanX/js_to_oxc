@@ -12,7 +12,7 @@ impl JsToOxc {
   where
     M: Fn(&T) -> TokenStream,
   {
-    let r#type = format_ident!("{}", r#type);
+    let _type = format_ident!("{}", r#type);
     match option {
       Some(value) => {
         let value = map(value);
@@ -21,7 +21,7 @@ impl JsToOxc {
         }
       }
       None => quote! {
-        None::<#r#type>
+        NONE
       },
     }
   }

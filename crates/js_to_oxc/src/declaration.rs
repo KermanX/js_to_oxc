@@ -48,14 +48,6 @@ impl JsToOxc {
           #ast_builder.declaration_class(#r#type, #span, #decorators, #id, #type_parameters, #super_class, #super_type_parameters, #implements, #body, #r#abstract, #declare)
         }
       }
-      Declaration::UsingDeclaration(node) => {
-        let is_await = node.is_await;
-        let declarations =
-          self.gen_vec(&node.declarations, |declarator| self.gen_variable_declarator(declarator));
-        quote! {
-          #ast_builder.declaration_using(#span, #is_await, #declarations)
-        }
-      }
       _ => unimplemented!("ts"),
     }
   }
@@ -68,6 +60,8 @@ impl JsToOxc {
       VariableDeclarationKind::Var => quote! { VariableDeclarationKind::Var },
       VariableDeclarationKind::Let => quote! { VariableDeclarationKind::Let },
       VariableDeclarationKind::Const => quote! { VariableDeclarationKind::Const },
+      VariableDeclarationKind::Using => quote! { VariableDeclarationKind::Using },
+      VariableDeclarationKind::AwaitUsing => quote! { VariableDeclarationKind::AwaitUsing },
     }
   }
 
