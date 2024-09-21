@@ -32,7 +32,7 @@ where
   tokens = quote! {
     #[cfg(test)]
     mod #mod_name {
-      use oxc::ast::ast::*;
+      use oxc::ast::{ast::*, NONE};
       use oxc::span::{SourceType, SPAN};
       use oxc::syntax::number::{NumberBase, BigintBase};
       use oxc::syntax::operator::*;
