@@ -88,9 +88,9 @@ impl JsToOxc {
       Expression::ArrowFunctionExpression(node) => {
         let expression = node.expression;
         let r#async = node.r#async;
-        let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
+        let type_parameters = quote! { NONE };
         let params = self.gen_formal_parameters(&node.params);
-        let return_type = quote! { None::<TSTypeAnnotation> };
+        let return_type = quote! { NONE };
         let body = self.gen_function_body(&node.body);
         quote! {
             #ast_builder.expression_arrow_function(#span, #expression, #r#async, #type_parameters, #params, #return_type, #body)
@@ -127,7 +127,7 @@ impl JsToOxc {
         let callee = self.gen_expression(&node.callee);
         let optional = node.optional;
         quote! {
-          #ast_builder.expression_call(#span, #callee, None::<TSTypeParameterInstantiation>, #arguments, #optional)
+          #ast_builder.expression_call(#span, #callee, NONE, #arguments, #optional)
         }
       }
       Expression::ChainExpression(node) => {
@@ -140,10 +140,10 @@ impl JsToOxc {
         let r#type = self.gen_class_type(&node.r#type);
         let decorators = quote! { #ast_builder.vec() };
         let id = self.gen_option(&node.id, |id| self.gen_binding_identifier(id));
-        let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
+        let type_parameters = quote! { NONE };
         let super_class =
           self.gen_option(&node.super_class, |super_class| self.gen_expression(super_class));
-        let super_type_parameters = quote! { None::<TSTypeParameterInstantiation> };
+        let super_type_parameters = quote! { NONE };
         let implements = quote! { None };
         let body = self.gen_class_body(&node.body);
         let r#abstract = node.r#abstract;
@@ -168,10 +168,10 @@ impl JsToOxc {
         let generator = node.generator;
         let r#async = node.r#async;
         let declare = node.declare;
-        let type_parameters = quote! { None::<TSTypeParameterDeclaration> };
-        let this_param = quote! { None::<TSThisParameter> };
+        let type_parameters = quote! { NONE };
+        let this_param = quote! { NONE };
         let params = self.gen_formal_parameters(&node.params);
-        let return_type = quote! { None::<TSTypeAnnotation> };
+        let return_type = quote! { NONE };
         let body = self.gen_option(&node.body, |body| self.gen_function_body(body));
         quote! {
           #ast_builder.expression_function(#r#type, #span, #id, #generator, #r#async, #declare, #type_parameters, #this_param, #params, #return_type, #body)
@@ -198,7 +198,7 @@ impl JsToOxc {
         let callee = self.gen_expression(&node.callee);
         let arguments = self.gen_vec(&node.arguments, |argument| self.gen_argument(argument));
         quote! {
-          #ast_builder.expression_new(#span, #callee, #arguments, None::<TSTypeParameterInstantiation>)
+          #ast_builder.expression_new(#span, #callee, #arguments, NONE)
         }
       }
       Expression::ObjectExpression(node) => {
@@ -224,7 +224,7 @@ impl JsToOxc {
       Expression::TaggedTemplateExpression(node) => {
         let tag = self.gen_expression(&node.tag);
         let quasi = self.gen_template_literal(&node.quasi);
-        let type_parameters = quote! { None::<TSTypeParameterInstantiation> };
+        let type_parameters = quote! { NONE };
         quote! {
           #ast_builder.expression_tagged_template(#span, #tag, #quasi, #type_parameters)
         }

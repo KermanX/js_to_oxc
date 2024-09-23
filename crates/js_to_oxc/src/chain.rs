@@ -12,7 +12,7 @@ impl JsToOxc {
       let callee = self.gen_expression(&node.callee);
       let optional = node.optional;
       quote! {
-        #ast_builder.chain_element_call_expression(#span, #callee, None::<TSTypeParameterInstantiation>, #arguments, #optional)
+        #ast_builder.chain_element_call_expression(#span, #callee, NONE, #arguments, #optional)
       }
     } else {
       let node = element.to_member_expression();
