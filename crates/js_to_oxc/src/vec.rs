@@ -1,6 +1,6 @@
 use crate::JsToOxc;
 use oxc::allocator::Vec;
-use proc_macro2::TokenStream;
+use proc_macro2::{Literal, TokenStream};
 use quote::{quote, TokenStreamExt};
 
 impl JsToOxc {
@@ -9,12 +9,13 @@ impl JsToOxc {
     M: Fn(&T) -> TokenStream,
   {
     let ast_builder = &self.ast_builder;
-    if items.len() == 0 {
+    let len = items.len();
+    if len == 0 {
       return quote! {
           #ast_builder.vec()
       };
     }
-    if items.len() == 1 {
+    if len == 1 {
       let item = map(&items[0]);
       return quote! {
           #ast_builder.vec1(#item)
@@ -27,9 +28,10 @@ impl JsToOxc {
           items.push(#arg);
       });
     }
+    let len = Literal::usize_unsuffixed(len);
     quote! {
         {
-            let mut items = #ast_builder.vec();
+            let mut items = #ast_builder.vec_with_capacity(#len);
             #tokens
             items
         }
