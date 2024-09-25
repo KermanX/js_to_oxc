@@ -30,7 +30,7 @@ self.ast_builder.expression_call(
       false,
     ),
   ),
-  Option::<TSTypeParameterInstantiation>::None,
+  NONE,
   false,
 )
 ```
@@ -59,7 +59,7 @@ self.ast_builder.expression_call(
   ),
   self.ast_builder
     .expression_identifier_reference(SPAN, "log"),
-  Option::<TSTypeParameterInstantiation>::None,
+  NONE,
   false,
 )
 ```
