@@ -1,6 +1,5 @@
 [package]
 edition.workspace = true
-homepage.workspace = true
 license.workspace = true
 name = "js_to_oxc_wasm"
 repository.workspace = true

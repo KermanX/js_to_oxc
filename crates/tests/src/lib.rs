@@ -45,7 +45,7 @@ where
 
       fn print_program(program: Program) -> String {
         let codegen = oxc::codegen::CodeGenerator::new();
-        codegen.build(&program).source_text
+        codegen.build(&program).code
       }
 
       #tokens
@@ -101,7 +101,7 @@ pub fn generate_stmt_tests(name: &str, source: &str) -> TokenStream {
   let code = js_to_oxc.gen_program(&program);
 
   let codegen = CodeGenerator::new();
-  let expected = codegen.build(&program).source_text;
+  let expected = codegen.build(&program).code;
 
   let name = format_ident!("{}", name);
 

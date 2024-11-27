@@ -36,8 +36,9 @@ impl JsToOxc {
       }
       Expression::RegExpLiteral(node) => {
         let regex = self.gen_reg_exp(&node.regex);
+        let raw = node.raw;
         quote! {
-            #ast_builder.expression_reg_exp_literal(#span, EmptyObject {}, #regex)
+            #ast_builder.expression_reg_exp_literal(#span, #regex, #raw)
         }
       }
       Expression::StringLiteral(node) => {
@@ -242,7 +243,7 @@ impl JsToOxc {
           if let Expression::NumericLiteral(node) = &node.argument {
             if node.value == 0.0 {
               return quote! {
-                #ast_builder.void_0()
+                #ast_builder.void_0(#span)
               };
             }
           }
@@ -289,7 +290,7 @@ impl JsToOxc {
       _ => {
         let member_expr = self.gen_member_expression(node.to_member_expression());
         quote! {
-            #ast_builder.expression_member(#member_expr)
+            Expression::from(#member_expr)
         }
       }
     }

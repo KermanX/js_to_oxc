@@ -1,6 +1,5 @@
 [package]
 edition.workspace = true
-homepage.workspace = true
 license.workspace = true
 version = "0.0.1"
 name = "js_to_oxc_tests"

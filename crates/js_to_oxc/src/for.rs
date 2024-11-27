@@ -44,7 +44,7 @@ impl JsToOxc {
         let node = node.to_expression();
         let inner = self.gen_expression(node);
         quote! {
-          #ast_builder.for_statement_init_expression(#inner)
+          ForStatementInit::from(#inner)
         }
       }
     }

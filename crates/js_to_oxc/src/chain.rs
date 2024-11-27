@@ -18,7 +18,7 @@ impl JsToOxc {
       let node = element.to_member_expression();
       let inner = self.gen_member_expression(&node);
       quote! {
-        #ast_builder.chain_element_member_expression(#inner)
+        ChainElement::from(#inner)
       }
     }
   }

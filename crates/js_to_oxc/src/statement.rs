@@ -140,13 +140,13 @@ impl JsToOxc {
           let node = node.to_declaration();
           let inner = self.gen_declaration(node);
           quote! {
-            #ast_builder.statement_declaration(#inner)
+            Statement::from(#inner)
           }
         } else {
           let node = node.to_module_declaration();
           let inner = self.gen_module_declaration(node);
           quote! {
-              #ast_builder.statement_module_declaration(#inner)
+            Statement::from(#inner)
           }
         }
       }

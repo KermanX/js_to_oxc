@@ -16,12 +16,12 @@ Will be converted to:
 self.ast_builder.expression_call(
   SPAN,
   self.ast_builder.vec1(
-    self.ast_builder.argument_expression(
+    Argument::from(
       self.ast_builder
         .expression_string_literal(SPAN, "Hello, World!"),
     ),
   ),
-  self.ast_builder.expression_member(
+  Expression::from(
     self.ast_builder.member_expression_static(
       SPAN,
       self.ast_builder
@@ -53,7 +53,7 @@ Will be converted to:
 self.ast_builder.expression_call(
   SPAN,
   self.ast_builder.vec1(
-    self.ast_builder.argument_expression(
+    Argument::from(
       __1__  // hole
     ),
   ),

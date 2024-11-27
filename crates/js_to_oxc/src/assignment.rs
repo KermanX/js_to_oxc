@@ -8,16 +8,15 @@ use quote::quote;
 
 impl JsToOxc {
   pub(crate) fn gen_assignment_target(&self, target: &AssignmentTarget) -> TokenStream {
-    let ast_builder = &self.ast_builder;
     if target.is_simple_assignment_target() {
       let inner = self.gen_simple_assignment_target(target.to_simple_assignment_target());
       quote! {
-        #ast_builder.assignment_target_simple(#inner)
+        AssignmentTarget::from(#inner)
       }
     } else {
       let inner = self.gen_assignment_target_pattern(target.to_assignment_target_pattern());
       quote! {
-        #ast_builder.assignment_target_assignment_target_pattern(#inner)
+        AssignmentTarget::from(#inner)
       }
     }
   }
@@ -39,7 +38,7 @@ impl JsToOxc {
         let node = target.to_member_expression();
         let inner = self.gen_member_expression(&node);
         quote! {
-          #ast_builder.simple_assignment_target_member_expression(#inner)
+          SimpleAssignmentTarget::from(#inner)
         }
       }
     }
@@ -88,7 +87,7 @@ impl JsToOxc {
         let node = node.to_assignment_target();
         let inner = self.gen_assignment_target(node);
         quote! {
-          #ast_builder.assignment_target_maybe_default_assignment_target(#inner)
+          AssignmentTargetMaybeDefault::from(#inner)
         }
       }
     }

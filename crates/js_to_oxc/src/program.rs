@@ -12,7 +12,7 @@ impl JsToOxc {
     let directives = self.gen_vec(&node.directives, |directive| self.gen_directive(directive));
     let body = self.gen_vec(&node.body, |statement| self.gen_statement(statement));
     quote! {
-      #ast_builder.program(#span, #source_type, #hashbang, #directives, #body)
+      #ast_builder.program(#span, #source_type, "__SOURCE__", #ast_builder.vec(), #hashbang, #directives, #body)
     }
   }
 

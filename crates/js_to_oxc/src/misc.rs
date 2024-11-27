@@ -11,13 +11,13 @@ impl JsToOxc {
       Argument::SpreadElement(argument) => {
         let argument = self.gen_expression(&argument.argument);
         quote! {
-            #ast_builder.argument_spread_element(#span, #argument),
+          #ast_builder.argument_spread_element(#span, #argument),
         }
       }
       _ => {
         let expr = self.gen_expression(argument.to_expression());
         quote! {
-            #ast_builder.argument_expression(#expr),
+          Argument::from(#expr),
         }
       }
     }

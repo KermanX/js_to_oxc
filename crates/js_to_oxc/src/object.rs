@@ -12,7 +12,6 @@ impl JsToOxc {
         let kind = self.gen_property_kind(&property.kind);
         let key = self.gen_property_key(&property.key);
         let value = self.gen_expression(&property.value);
-        let init = self.gen_option(&property.init, |init| self.gen_expression(init));
         let method = property.method;
         let shorthand = property.shorthand;
         let computed = property.computed;
@@ -22,7 +21,6 @@ impl JsToOxc {
             #kind,
             #key,
             #value,
-            #init,
             #method,
             #shorthand,
             #computed,
